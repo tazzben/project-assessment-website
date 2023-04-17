@@ -1,0 +1,36 @@
+runtime: python310
+
+handlers:
+# file with extensions (longer cache period)
+- url: /(.*\.(css|woff|woff2|ico|png|jpg|svg|map))
+  static_files: static/\1
+  upload: static/(.*)
+  expiration: "14d"
+  secure: always
+
+# document files go to the downloads folder
+- url: /(.*\.(pdf))
+  static_files: downloads/\1
+  upload: downloads/(.*)
+  expiration: "14d"
+  secure: always
+
+# file with defined extensions
+- url: /(.*\.(html|txt|js|py))
+  static_files: static/\1
+  upload: static/(.*)
+  secure: always
+
+# assume file without extensions use index.html
+- url: /(.*)/
+  static_files: static/\1/index.html
+  upload: static/(.*)/index.html
+  secure: always
+
+- url: /
+  static_files: static/index.html
+  upload: static/index.html
+  secure: always
+
+- url: /.*
+  script: auto

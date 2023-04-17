@@ -1,0 +1,10 @@
+#rubricResults td:not(:first-child), #rubricHeader th:not(:first-child), #modelFitResults td:not(:first-child), #modelFitResults th:not(:first-child){
+    text-align: right;
+}
+#studentKDE, #studentKDEAML {
+    display: inline;
+}
+#studentKDEStat, #studentKDEStatAML {
+    margin-left: 20px;
+    display: inline;
+}
