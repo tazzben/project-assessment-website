@@ -1,16 +1,15 @@
 Dropzone.options.myDropzone = {
-    dictDefaultMessage: "Drag a CSV here to get started.  The CSV should contain columns of rubric scores, student and rubric row identifiers, and the max possible score on a rubric row.",
+    dictDefaultMessage: "Drag a CSV here.  The CSV should contain columns of rubric scores, student and rubric row identifiers, and the max possible score on a rubric row.",
     maxFilesize: 10,
     acceptedFiles: ".csv",
     accept: function (file, done) {
         var reader = new FileReader();
-        reader.addEventListener("loadend", function (event) {
+        reader.addEventListener("loadend", async function (event) {
             $('#alertBox').hide();
             let data = event.target.result;
             passFileData = pyscript.interpreter.globals.get('passFileData')
             passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
-            dz.options.dictDefaultMessage = "Drag a different CSV file to reset the analysis.  The CSV should contain columns of rubric scores, student and rubric row identifiers, and the max possible score on a rubric row.";
             dz.removeAllFiles(true);            
         });
         reader.readAsText(file);
@@ -23,7 +22,7 @@ Dropzone.options.myFilter = {
     acceptedFiles: ".csv",
     accept: function (file, done) {
         var reader = new FileReader();
-        reader.addEventListener("loadend", function (event) {
+        reader.addEventListener("loadend", async function (event) {
             let data = event.target.result;
             listdata = pyscript.interpreter.globals.get('getListData')
             let myStudentList = JSON.parse(listdata(data));
@@ -32,6 +31,10 @@ Dropzone.options.myFilter = {
             } else {
                 $('#alertBox').show();
                 $('#alertBox').text("The CSV file you uploaded does not contain a list of student identifiers.");
+                $('#alertBox')[0].scrollIntoView();
+                $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+                    $("#alertBox").slideUp(1000);
+                });
             }
             let dz = Dropzone.forElement("#my-filter");
             dz.removeAllFiles(true);            
@@ -39,6 +42,21 @@ Dropzone.options.myFilter = {
         reader.readAsText(file);
     }
 };
+
+function saveSvg(svgEl, name) {
+    svgEl.find("svg").attr("xmlns", "http://www.w3.org/2000/svg");
+    let svgData = svgEl.html();
+    let preface = '<?xml version="1.0" standalone="no"?>\r\n';
+    let svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+    let svgUrl = URL.createObjectURL(svgBlob);
+    let downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = name;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
 
 $("#saveMapping").click(function () {
     saveMapping();
@@ -48,4 +66,28 @@ $("#closeMapping").click(function () {
 });
 $("#closeMappingButton").click(function () {
     $('#dataMapping').modal('hide');
+});
+$("#downloadRubric").click(function () {
+    $("#rubricTable").table2csv({filename: 'rubricInformation.csv',});
+});
+$("#downloadFit").click(function () {
+    $("#fitTable").table2csv({filename: 'fitInformation.csv',});
+});
+$("#downloadStudentML").click(function () {
+    $("#studentStatTable").table2csv({filename: 'studentAverageLogistic.csv',});
+});
+$("#downloadStudentAML").click(function () {
+    $("#studentStatTableAML").table2csv({filename: 'studentAverageMarginalLogistic.csv',});    
+});
+$('#downloadStudentImage').click(function () {
+    saveSvg($("#studentKDE"), "studentAverageLogistic.svg");
+});
+$('#downloadStudentImageAML').click(function () {
+    saveSvg($("#studentKDEAML"), "studentAverageLogistic.svg");
+});
+$('#startBootstrap').click(function () {
+    startBootstrap();
+});
+$('#clearGroups').click(function () {
+    rebuildGraphs();
 });

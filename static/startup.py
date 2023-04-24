@@ -1,12 +1,12 @@
-from js import updateBootstrap, populateColForm
-import pandas as pd
+import asyncio
+import json
 from io import StringIO
-import ProjectAssessmentForPyScript as pa
+from js import updateBootstrap, populateColForm, paintAfterBootstrap
+import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
 from scipy.stats import mannwhitneyu
-import json
-import asyncio
+import ProjectAssessmentForPyScript as pa
 
 workingData = pd.DataFrame()
 cleanData = pd.DataFrame()
@@ -15,14 +15,15 @@ def passFileData(data):
     global workingData
     numericColumns = []
     textColumns = []
-    csvStringIO = StringIO(data)
-    df = pd.read_csv(csvStringIO, sep=",")
-    for col in df.columns:
-        if is_string_dtype(df[col]):
-            textColumns.append(col)
-        elif is_numeric_dtype(df[col]):
-            numericColumns.append(col)
-    workingData = df
+    if len(data) > 0:
+        csvStringIO = StringIO(data)
+        df = pd.read_csv(csvStringIO, sep=",")
+        for col in df.columns:
+            if is_string_dtype(df[col]):
+                textColumns.append(col)
+            elif is_numeric_dtype(df[col]):
+                numericColumns.append(col)
+        workingData = df
     populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
 
 def updateJS(i, n):
@@ -45,7 +46,7 @@ async def buildTable(colList):
         df = pd.DataFrame(data=d)
         cleanData = df
         try:
-            rubricR, studentR, _, _, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood  = pa.getResults(df, func=updateJS, n=0)
+            rubricR, studentR, _, _, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood  = await pa.getResults(df, func=updateJS, n=0)
         except:
             return None
         return rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood
@@ -55,22 +56,25 @@ async def startBootstrap():
     global cleanData
     if not cleanData.empty:
         try:
-            rubricR, _, bootstrap, errors, _, _, _, _, _, _ = pa.getResults(cleanData, func=updateJS)
+            rubricR, _, bootstrap, errors, _, _, _, _, _, _, _, _ = await pa.getResults(cleanData, func=updateJS)
         except:
             return None
-        printedRubric = rubricR.merge(bootstrap, on='Variable', how='left')
-        return printedRubric.to_json(orient='records'), errors
+        printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')
+        paintAfterBootstrap(printedRubric, errors)   
+        return True
     return None
 
 def getListData(data):
+    if len(data) == 0:
+        return json.dumps([])
     csvStringIO = StringIO(data)
     df = pd.read_csv(csvStringIO, sep=",")
-    return json.dumps(df.to_numpy().flatten().tolist())
+    return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
 
-async def calcMeansSDMW(listOne, listTwo):
+def calcMeansSDMW(listOne, listTwo):
     s1 = pd.Series(listOne)
     if len(listTwo) == 0:
-        return s1.mean(), s1.std()
+        return json.dumps([float(s1.mean()), float(s1.std())])
     s2 = pd.Series(listTwo)
     _, p = mannwhitneyu(s1, s2)
-    return s1.mean(), s1.std(), s2.mean(), s2.std(), p
+    return json.dumps([float(s1.mean()), float(s1.std()), float(s2.mean()), float(s2.std()), float(p)])

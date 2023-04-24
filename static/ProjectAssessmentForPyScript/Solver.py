@@ -1,3 +1,4 @@
+import asyncio
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
@@ -102,14 +103,14 @@ def bootstrapRow (dataset, columns, rubric=False, linear=False):
     resultData = pd.concat(l, ignore_index=True)
     return solve(resultData, False, linear, columns)
 
-def CallRow(row):
+async def CallRow(row):
     key = 'student' if row['rubric'] else 'rubric'
     r = bootstrapRow(row['dataset'], row['columns'], row['rubric'], row['linear'])
     if r is not None:
         return (r[key], r['variables'])
     return None
 
-def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=None):
+async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=None):
     l = []
     rows = [
         {
@@ -121,7 +122,8 @@ def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=None):
     ]*n
     nones = []    
     for i, row in enumerate(rows):
-        result = CallRow(row)
+        await asyncio.sleep(0)
+        result = await CallRow(row)
         if result is not None:
             keyresult, varresult = result
             l.append(keyresult)
@@ -138,7 +140,7 @@ def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=None):
 def compareKBound(x):
     return pd.to_numeric(x, downcast='integer')
 
-def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear=False, columns=None, func=None):
+async def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear=False, columns=None, func=None):
     """
     Estimates the parameters of the model and produces confidence intervals for the estimates using a bootstrap method.
 
@@ -207,7 +209,7 @@ def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear=False
     if estimates is not None:
         l = []
         if n > 0:
-            results = bootstrap(dataset, n, rubric, linear=linear, columns=columns, func=func)
+            results = await bootstrap(dataset, n, rubric, linear=linear, columns=columns, func=func)
             nones = results['nones']
             r = results['results']
             for var in r['Variable'].unique():

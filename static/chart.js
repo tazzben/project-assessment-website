@@ -29,11 +29,8 @@ function buildData (variable='Average Logistic', filterList = []){
         }
         return l;
     }
-    console.log(filterList);
     let inList = savedStudent.filter( x => filterList.includes(x['Variable']));
-    console.log(inList);
     let outList = savedStudent.filter( x => !filterList.includes(x['Variable']));
-    console.log(outList);
     let obj = {};
     let d = inList.map( x => x[variable]);
     if (d.length > 1) {
@@ -59,14 +56,14 @@ function buildData (variable='Average Logistic', filterList = []){
 async function buildSumTable(l1, l2, target='#StatData'){
   $(target).empty();
   getSummaryStats = pyscript.interpreter.globals.get('calcMeansSDMW');
-  let response = await getSummaryStats(l1, l2);
+  let response = getSummaryStats(l1, l2);
   let mean1, sd1, mean2, sd2, mw, textExtra, textExtra2;
   if (l2.length == 0) {
-    mean1, sd1 = response;
+    [mean1, sd1] = JSON.parse(response);
     textExtra = "";
     textExtra2 = "";
   } else {
-    mean1, sd1, mean2, sd2, mw = response;
+    [mean1, sd1, mean2, sd2, mw] = JSON.parse(response);
     textExtra = " of students in group";
     textExtra2 = " of students not in group";
   }
@@ -145,14 +142,16 @@ async function buildGraphics(data, location='#studentKDE'){
         silverFinal = Math.max(silverFinal, 1.06 * getStandardDeviation(data[i].data) * Math.pow(data[i].data.length, -0.2));
     }
     if(silverFinal == 0) {
-      console.log('No data to plot');
-      console.log(data);
       $('#alertBox').show();
       $('#alertBox').text("No data to plot.");
+      $('#alertBox')[0].scrollIntoView();
+      $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").slideUp(1000);
+      });
       return;
     }
 
-    const contentWidth = Math.max($('#rubricTable').width(), $('#fitTable').width(), $(location).width());
+    const contentWidth = Math.min(Math.max($('#rubricTableRow').width(), $('#fitTableRow').width(), $(location).width(), 480), 1320);
     $(location).empty();
 
 
@@ -199,8 +198,8 @@ async function buildGraphics(data, location='#studentKDE'){
                           .y(function(d) { return y(d[1]); })
                   );
         if (data.length > 1) {
-          svg.append("circle").attr("cx", width - 130).attr("cy",30 + pos).attr("r", 6).style("fill", d.stroke);
-          svg.append("text").attr("x", width - 110).attr("y", 30 + pos).text(d.chartLabel).style("font-size", "15px").attr("alignment-baseline","middle");
+          svg.append("circle").attr("cx", width - 150).attr("cy",30 + pos).attr("r", 6).style("fill", d.stroke);
+          svg.append("text").attr("x", width - 130).attr("y", 30 + pos).text(d.chartLabel).style("font-size", "15px").attr("alignment-baseline","middle");
         }
         pos += 30;
     }
