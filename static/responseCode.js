@@ -18,6 +18,7 @@ async function startBootstrap(){
         return;
     }
     $("#startBootstrap").prop("disabled", true);
+    bootstrap.Tooltip.getInstance('#startBootstrap').hide();
     $("#progressFooter").show();
     $('body').css('paddingBottom', $('#progressFooter').height() + 20 + 'px');
     $('#bootstrapProgress').text("0%");
