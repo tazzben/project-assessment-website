@@ -88,7 +88,7 @@ $( document ).ready(function() {
         saveSvg($("#studentKDE"), "studentAverageLogistic.svg");
     });
     $('#downloadStudentImageAML').click(function () {
-        saveSvg($("#studentKDEAML"), "studentAverageLogistic.svg");
+        saveSvg($("#studentKDEAML"), "studentAverageMarginalLogistic.svg");
     });
     $('#startBootstrap').click(function () {
         startBootstrap();
