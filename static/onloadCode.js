@@ -17,7 +17,7 @@ Dropzone.options.myDropzone = {
 };
 
 Dropzone.options.myFilter = {
-    dictDefaultMessage: "Drag a CSV here to make a separate group of students in the graph.",
+    dictDefaultMessage: "Drag a CSV here to make a separate group of students in the graphs.",
     maxFilesize: 10,
     acceptedFiles: ".csv",
     accept: function (file, done) {
@@ -58,40 +58,77 @@ function saveSvg(svgEl, name) {
 }
 
 
-$("#saveMapping").click(function () {
-    saveMapping();
-});
-$("#closeMapping").click(function () {
-    $('#dataMapping').modal('hide');
-});
-$("#closeMappingButton").click(function () {
-    $('#dataMapping').modal('hide');
-});
-$("#downloadRubric").click(function () {
-    $("#rubricTable").table2csv({filename: 'rubricInformation.csv',});
-});
-$("#downloadFit").click(function () {
-    $("#fitTable").table2csv({filename: 'fitInformation.csv',});
-});
-$("#downloadStudentML").click(function () {
-    $("#studentStatTable").table2csv({filename: 'studentAverageLogistic.csv',});
-});
-$("#downloadStudentAML").click(function () {
-    $("#studentStatTableAML").table2csv({filename: 'studentAverageMarginalLogistic.csv',});    
-});
-$('#downloadStudentImage').click(function () {
-    saveSvg($("#studentKDE"), "studentAverageLogistic.svg");
-});
-$('#downloadStudentImageAML').click(function () {
-    saveSvg($("#studentKDEAML"), "studentAverageLogistic.svg");
-});
-$('#startBootstrap').click(function () {
-    startBootstrap();
-});
-$('#clearGroups').click(function () {
-    rebuildGraphs();
-});
+
 $( document ).ready(function() {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+    $("#saveMapping").click(function () {
+        saveMapping();
+    });
+    $("#closeMapping").click(function () {
+        $('#dataMapping').modal('hide');
+    });
+    $("#closeMappingButton").click(function () {
+        $('#dataMapping').modal('hide');
+    });
+    $("#downloadRubric").click(function () {
+        $("#rubricTable").table2csv({filename: 'rubricInformation.csv',});
+    });
+    $("#downloadFit").click(function () {
+        $("#fitTable").table2csv({filename: 'fitInformation.csv',});
+    });
+    $("#downloadStudentML").click(function () {
+        $("#studentStatTable").table2csv({filename: 'studentAverageLogistic.csv',});
+    });
+    $("#downloadStudentAML").click(function () {
+        $("#studentStatTableAML").table2csv({filename: 'studentAverageMarginalLogistic.csv',});    
+    });
+    $('#downloadStudentImage').click(function () {
+        saveSvg($("#studentKDE"), "studentAverageLogistic.svg");
+    });
+    $('#downloadStudentImageAML').click(function () {
+        saveSvg($("#studentKDEAML"), "studentAverageLogistic.svg");
+    });
+    $('#startBootstrap').click(function () {
+        startBootstrap();
+    });
+    $('#clearGroups').click(function () {
+        rebuildGraphs();
+    });
+
+    $("#zoomAppointment").click(function () {
+        Calendly.initPopupWidget({
+          url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
+          prefill: {
+            customAnswers: {
+              a1: 5,
+            },
+          },
+        });
+        return false;
+    });
+
 });
+var calendlyWindow = {};
+calendlyWindow.setChangeHash = function () {
+  if (window.location.hash.replace("#", "") == "zoom") {
+    Calendly.initPopupWidget({
+      url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
+      prefill: {
+        customAnswers: {
+          a1: 5,
+        },
+      },
+    });
+    if (history.pushState) {
+      history.pushState(null, null, '#');
+    } else {
+      location.hash = '#';
+    }
+  }
+};
+if ("onhashchange" in window) {
+  window.onhashchange = calendlyWindow.setChangeHash;
+}
+calendlyWindow.setChangeHash();
