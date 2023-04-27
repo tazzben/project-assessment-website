@@ -119,6 +119,33 @@ async function paintRubricTable (rubricR, bootstrap = false) {
     
 }
 
+function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood){
+    $("#startBootstrap").prop("disabled", false);
+    let rubricR = JSON.parse(rubricRW);
+    let studentR = JSON.parse(studentRW);
+    savedRubric = rubricR;
+    savedStudent = studentR;
+    paintRubricTable(rubricR);
+    $('#modelFitResults').empty();
+    let paramList = [["Number of Observations", obs],["Number of Parameters", param],["AIC", AIC],["BIC", BIC],["McFadden's R^2", McFadden],["LR Statistic", LR],["Chi-Squared P-Value", ChiSquared],["Log Likelihood", LogLikelihood]];
+    for (let par of paramList) {
+        let m = document.createElement( "tr" );
+        let td = document.createElement("td");
+        td.textContent = par[0];
+        m.appendChild(td);
+        td = document.createElement("td");
+        if (par[0] == "Number of Observations" || par[0] == "Number of Parameters") {
+            td.textContent = Number.parseFloat(par[1]).toFixed(0);
+        } else {
+            td.textContent = Number.parseFloat(par[1]).toFixed(3);
+        }
+        m.appendChild(td);
+        $('#modelFitResults').append(m);
+    }
+    rebuildGraphs();
+}
+
+
 async function saveMapping() {
     let kValue = $('#kValueSelect').val();
     let bound = $('#boundSelect').val();
@@ -128,33 +155,7 @@ async function saveMapping() {
     $('#dataMapping').modal('hide');
     passMappingData = pyscript.interpreter.globals.get('buildTable');
     let response = await passMappingData(data);
-    if (response && response.length == 10) {
-        let [rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood] = response;
-        
-        $("#startBootstrap").prop("disabled", false);
-        let rubricR = JSON.parse(rubricRW);
-        let studentR = JSON.parse(studentRW);
-        savedRubric = rubricR;
-        savedStudent = studentR;
-        paintRubricTable(rubricR);
-        $('#modelFitResults').empty();
-        let paramList = [["Number of Observations", obs],["Number of Parameters", param],["AIC", AIC],["BIC", BIC],["McFadden's R^2", McFadden],["LR Statistic", LR],["Chi-Squared P-Value", ChiSquared],["Log Likelihood", LogLikelihood]];
-        for (let par of paramList) {
-            let m = document.createElement( "tr" );
-            let td = document.createElement("td");
-            td.textContent = par[0];
-            m.appendChild(td);
-            td = document.createElement("td");
-            if (par[0] == "Number of Observations" || par[0] == "Number of Parameters") {
-                td.textContent = Number.parseFloat(par[1]).toFixed(0);
-            } else {
-                td.textContent = Number.parseFloat(par[1]).toFixed(3);
-            }
-            m.appendChild(td);
-            $('#modelFitResults').append(m);
-        }
-        rebuildGraphs();
-    } else {
+    if (!response) {
         $('#alertBox').text("We were unable to estimate the model. Please try again.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();

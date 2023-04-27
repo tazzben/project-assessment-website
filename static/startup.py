@@ -1,7 +1,7 @@
 import asyncio
 import json
 from io import StringIO
-from js import updateBootstrap, populateColForm, paintAfterBootstrap
+from js import updateBootstrap, populateColForm, paintAfterBootstrap, paintAfterEst
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
@@ -49,7 +49,8 @@ async def buildTable(colList):
             rubricR, studentR, _, _, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood  = await pa.getResults(df, func=updateJS, n=0)
         except:
             return None
-        return rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood
+        paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
+        return True
     return None
 
 async def startBootstrap():
