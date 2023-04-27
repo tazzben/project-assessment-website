@@ -96,6 +96,9 @@ $( document ).ready(function() {
     $('#clearGroups').click(function () {
         rebuildGraphs();
     });
+    $('.saveStudentCSV').click(function () {
+        saveStudentCSV('StudentEstimates.csv');
+    });
 
     $("#zoomAppointment").click(function () {
         Calendly.initPopupWidget({

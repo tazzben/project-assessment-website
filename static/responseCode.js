@@ -183,3 +183,52 @@ async function rebuildGraphs(filterdata = []){
     [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
     buildSumTable(AMLl1, AMLl2, target='#StatDataAML');
 }
+
+function buildCSVQuote(text) {
+    return "\"" + text.replace(/"/g, "\"\"") + "\"";
+}
+
+function buildCSVStudentData (){
+    if (savedStudent.length == 0) {
+        $('#alertBox').text("Cannot export data. Please estimate the model first.");
+        $('#alertBox').show();
+        $('#alertBox')[0].scrollIntoView();
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+            $("#alertBox").slideUp(1000);
+        });
+        return;
+    }
+    let headerData = ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic'];
+    let stream = "";
+
+    for (let head of headerData) {
+        stream += buildCSVQuote(head) + ",";
+    }
+    stream += "\n";
+    for (let row of savedStudent) {
+        for (let head of headerData) {
+            let content = row[head];
+            if (Array.isArray(content) && content.length == 2) {
+                content = "(" + Number.parseFloat(content[0]).toFixed(3) + ", " + Number.parseFloat(content[1]).toFixed(3) + ")";
+            } else if (head == 'Variable') {
+                content = content;
+            } else {
+                content = Number.parseFloat(content).toFixed(3);
+            }
+            stream += buildCSVQuote(String(content).trim()) + ",";
+        }
+        stream += "\n";
+    }
+    return stream;
+}
+
+function saveStudentCSV(filename) {
+    let element = document.createElement("a");
+    let text = buildCSVStudentData();
+    element.setAttribute("href", "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(text));
+    element.setAttribute("download", filename);
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
