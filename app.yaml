@@ -2,16 +2,9 @@ runtime: python310
 
 handlers:
 # file with extensions (longer cache period)
-- url: /(.*\.(css|woff|woff2|ico|png|jpg|svg|map))
+- url: /(.*\.(css|woff|woff2|ico|png|jpg|svg|map|csv))
   static_files: static/\1
   upload: static/(.*)
-  expiration: "14d"
-  secure: always
-
-# document files go to the downloads folder
-- url: /(.*\.(pdf))
-  static_files: downloads/\1
-  upload: downloads/(.*)
   expiration: "14d"
   secure: always
 
