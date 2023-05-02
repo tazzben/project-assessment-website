@@ -88,7 +88,7 @@ async function buildSumTable(l1, l2, target='#StatData'){
 
   m = document.createElement( "tr" );
   td = document.createElement("td");
-  td.textContent = "Observations" + textExtra;
+  td.textContent = "# of Estimates" + textExtra;
   m.appendChild(td);
   td = document.createElement("td");
   td.textContent = Number.parseFloat(count1).toFixed(0);
@@ -117,7 +117,7 @@ async function buildSumTable(l1, l2, target='#StatData'){
 
     m = document.createElement( "tr" );
     td = document.createElement("td");
-    td.textContent = "Observations" + textExtra2;
+    td.textContent = "# of Estimates" + textExtra2;
     m.appendChild(td);
     td = document.createElement("td");
     td.textContent = Number.parseFloat(count2).toFixed(0);

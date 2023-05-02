@@ -88,6 +88,13 @@ function populateColForm(num, text) {
         $('#rubricSelect').append(new Option(this, this, rubricSelect, rubricSelect));
     });
     $('#dataMapping').modal('show');
+    let acShown = false;
+    $(".accordion-body").each(function( index ) {
+        acShown = $(this).is(":visible") ? true : acShown ;
+    });
+    if (!acShown) {
+        $("#headingOne").find("button").click();
+    }
 }
 
 async function paintRubricTable (rubricR, bootstrap = false) {
