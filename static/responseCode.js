@@ -87,14 +87,16 @@ function populateColForm(num, text) {
         let rubricSelect = this == 'rubric' ? true : false;
         $('#rubricSelect').append(new Option(this, this, rubricSelect, rubricSelect));
     });
-    $('#dataMapping').modal('show');
-    let acShown = false;
-    $(".accordion-body").each(function( index ) {
-        acShown = $(this).is(":visible") ? true : acShown ;
-    });
-    if (!acShown) {
-        $("#headingOne").find("button").click();
+    if($("#modelResults").is(':visible')){
+        let acShown = false;
+        $(".accordion-body").each(function( index ) {
+            acShown = $(this).is(":visible") ? true : acShown ;
+        });
+        if (!acShown) {
+            $("#headingOne").find("button").click();
+        }
     }
+    $('#dataMapping').modal('show');
 }
 
 async function paintRubricTable (rubricR, bootstrap = false) {
