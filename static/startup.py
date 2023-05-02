@@ -75,7 +75,7 @@ def getListData(data):
 def calcMeansSDMW(listOne, listTwo):
     s1 = pd.Series(listOne)
     if len(listTwo) == 0:
-        return json.dumps([float(s1.mean()), float(s1.std())])
+        return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count())])
     s2 = pd.Series(listTwo)
     _, p = mannwhitneyu(s1, s2)
-    return json.dumps([float(s1.mean()), float(s1.std()), float(s2.mean()), float(s2.std()), float(p)])
+    return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count()), float(s2.mean()), float(s2.std()), int(s2.count()), float(p)])

@@ -57,13 +57,13 @@ async function buildSumTable(l1, l2, target='#StatData'){
   $(target).empty();
   getSummaryStats = pyscript.interpreter.globals.get('calcMeansSDMW');
   let response = getSummaryStats(l1, l2);
-  let mean1, sd1, mean2, sd2, mw, textExtra, textExtra2;
+  let mean1, sd1, count1, mean2, sd2, count2, mw, textExtra, textExtra2;
   if (l2.length == 0) {
-    [mean1, sd1] = JSON.parse(response);
+    [mean1, sd1, count1] = JSON.parse(response);
     textExtra = "";
     textExtra2 = "";
   } else {
-    [mean1, sd1, mean2, sd2, mw] = JSON.parse(response);
+    [mean1, sd1, count1, mean2, sd2, count2, mw] = JSON.parse(response);
     textExtra = " of students in group";
     textExtra2 = " of students not in group";
   }
@@ -86,6 +86,16 @@ async function buildSumTable(l1, l2, target='#StatData'){
   m.appendChild(td);
   $(target).append(m);
 
+  m = document.createElement( "tr" );
+  td = document.createElement("td");
+  td.textContent = "Observations" + textExtra;
+  m.appendChild(td);
+  td = document.createElement("td");
+  td.textContent = Number.parseFloat(count1).toFixed(0);
+  m.appendChild(td);
+  $(target).append(m);
+
+
   if (l2.length > 0) {
     m = document.createElement( "tr" );
     td = document.createElement("td");
@@ -102,6 +112,15 @@ async function buildSumTable(l1, l2, target='#StatData'){
     m.appendChild(td);
     td = document.createElement("td");
     td.textContent = Number.parseFloat(sd2).toFixed(3);
+    m.appendChild(td);
+    $(target).append(m);
+
+    m = document.createElement( "tr" );
+    td = document.createElement("td");
+    td.textContent = "Observations" + textExtra2;
+    m.appendChild(td);
+    td = document.createElement("td");
+    td.textContent = Number.parseFloat(count2).toFixed(0);
     m.appendChild(td);
     $(target).append(m);
 
