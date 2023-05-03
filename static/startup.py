@@ -18,10 +18,7 @@ def passFileData(data, extension):
     if len(data) > 0:
         csvStringIO = StringIO(data)
         if (extension and (extension.lower().strip() in ['xls', 'xlsx'])):
-            if extension.lower().strip() == 'xls':
-                df = pd.read_excel(csvStringIO, engine='xlrd')
-            else:
-                df = pd.read_excel(csvStringIO, engine='openpyxl')
+            df = pd.read_excel(csvStringIO)
         else:
             df = pd.read_csv(csvStringIO, sep=",")
         for col in df.columns:
@@ -76,10 +73,7 @@ def getListData(data, extension):
         return json.dumps([])
     csvStringIO = StringIO(data)
     if (extension and (extension.lower().strip() in ['xls', 'xlsx'])):
-        if extension.lower().strip() == 'xls':
-            df = pd.read_excel(csvStringIO, engine='xlrd')
-        else:
-            df = pd.read_excel(csvStringIO, engine='openpyxl')
+        df = pd.read_excel(csvStringIO)
     else:
         df = pd.read_csv(csvStringIO, sep=",")
     return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
