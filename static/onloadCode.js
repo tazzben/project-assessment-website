@@ -15,7 +15,11 @@ Dropzone.options.myDropzone = {
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);            
         });
-        reader.readAsText(file);
+        if (uploadFileExt && (['xlsx','xls'].includes(uploadFileExt.toLocaleLowerCase().trim()))) {
+            reader.readAsBinaryString(file);
+        } else{
+            reader.readAsText(file);
+        }
     }
 };
 
@@ -45,7 +49,11 @@ Dropzone.options.myFilter = {
             let dz = Dropzone.forElement("#my-filter");
             dz.removeAllFiles(true);            
         });
-        reader.readAsText(file);
+        if (uploadFileExtFilter && (['xlsx','xls'].includes(uploadFileExtFilter.toLocaleLowerCase().trim()))) {
+            reader.readAsBinaryString(file);
+        } else{
+            reader.readAsText(file);
+        }
     }
 };
 
