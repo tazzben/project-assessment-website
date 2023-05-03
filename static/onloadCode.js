@@ -1,17 +1,14 @@
 Dropzone.options.myDropzone = {
     dictDefaultMessage: "Drag a CSV here.  The CSV should contain columns of rubric scores, student and rubric row identifiers, and the max possible score on a rubric row.",
     maxFilesize: 10,
-    acceptedFiles: ".csv, .xlsx, .xls",
-    maxFiles: 1,
+    acceptedFiles: ".csv",
     accept: function (file, done) {
-        let re = /(?:\.([^.]+))?$/;
-        var uploadFileExt = re.exec(file.name)[1];
         var reader = new FileReader();
         reader.addEventListener("loadend", async function (event) {
             $('#alertBox').hide();
             let data = event.target.result;
             passFileData = pyscript.interpreter.globals.get('passFileData')
-            passFileData(data, uploadFileExt);
+            passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);            
         });
@@ -22,16 +19,13 @@ Dropzone.options.myDropzone = {
 Dropzone.options.myFilter = {
     dictDefaultMessage: "Drag a CSV here to make a separate group of students in the graphs.",
     maxFilesize: 10,
-    acceptedFiles: ".csv, .xlsx, .xls",
-    maxFiles: 1,
+    acceptedFiles: ".csv",
     accept: function (file, done) {
-        let re = /(?:\.([^.]+))?$/;
-        var uploadFileExtFilter = re.exec(file.name)[1];
         var reader = new FileReader();
         reader.addEventListener("loadend", async function (event) {
             let data = event.target.result;
             listdata = pyscript.interpreter.globals.get('getListData')
-            let myStudentList = JSON.parse(listdata(data, uploadFileExtFilter));
+            let myStudentList = JSON.parse(listdata(data));
             if (myStudentList.length > 0) {
                 rebuildGraphs(myStudentList);  
             } else {

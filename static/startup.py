@@ -11,16 +11,13 @@ import ProjectAssessmentForPyScript as pa
 workingData = pd.DataFrame()
 cleanData = pd.DataFrame()
 
-def passFileData(data, extension):
+def passFileData(data):
     global workingData
     numericColumns = []
     textColumns = []
     if len(data) > 0:
         csvStringIO = StringIO(data)
-        if (extension and (extension.lower().strip() in ['xls', 'xlsx'])):
-            df = pd.read_excel(csvStringIO)
-        else:
-            df = pd.read_csv(csvStringIO, sep=",")
+        df = pd.read_csv(csvStringIO, sep=",")
         for col in df.columns:
             if is_string_dtype(df[col]):
                 textColumns.append(col)
@@ -68,14 +65,11 @@ async def startBootstrap():
         return True
     return None
 
-def getListData(data, extension):
+def getListData(data):
     if len(data) == 0:
         return json.dumps([])
     csvStringIO = StringIO(data)
-    if (extension and (extension.lower().strip() in ['xls', 'xlsx'])):
-        df = pd.read_excel(csvStringIO)
-    else:
-        df = pd.read_csv(csvStringIO, sep=",")
+    df = pd.read_csv(csvStringIO, sep=",")
     return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
 
 def calcMeansSDMW(listOne, listTwo):
