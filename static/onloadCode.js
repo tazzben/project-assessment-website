@@ -1,6 +1,7 @@
 Dropzone.options.myDropzone = {
     dictDefaultMessage: "Drag a CSV here.  The CSV should contain columns of rubric scores, student and rubric row identifiers, and the max possible score on a rubric row.",
     maxFilesize: 10,
+    maxFiles: 1,
     acceptedFiles: ".csv",
     accept: function (file, done) {
         var reader = new FileReader();
@@ -19,6 +20,7 @@ Dropzone.options.myDropzone = {
 Dropzone.options.myFilter = {
     dictDefaultMessage: "Drag a CSV here to make a separate group of students in the graphs.",
     maxFilesize: 10,
+    maxFiles: 1,
     acceptedFiles: ".csv",
     accept: function (file, done) {
         var reader = new FileReader();
