@@ -2,7 +2,7 @@ runtime: python310
 
 handlers:
 # file with extensions (longer cache period)
-- url: /(.*\.(css|woff|woff2|ico|png|jpg|map))
+- url: /(.*\.(css|woff|woff2|ico|png|jpg|map|zip))
   static_files: static/\1
   upload: static/(.*)
   expiration: "14d"
