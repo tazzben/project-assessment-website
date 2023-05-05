@@ -1,4 +1,4 @@
-runtime: python310
+runtime: python311
 
 handlers:
 # file with extensions (longer cache period)
