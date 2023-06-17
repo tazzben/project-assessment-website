@@ -26,7 +26,7 @@ def passFileData(data):
         workingData = df
     populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
 
-def updateJS(i, n):
+async def updateJS(i, n):
     updateBootstrap(i, n)
 
 async def buildTable(colList):
@@ -53,6 +53,9 @@ async def buildTable(colList):
         return True
     return None
 
+async def buildTableWrapper(colList):
+    return await asyncio.create_task(buildTable(colList))
+
 async def startBootstrap():
     global cleanData
     if not cleanData.empty:
@@ -64,6 +67,9 @@ async def startBootstrap():
         paintAfterBootstrap(printedRubric, errors)   
         return True
     return None
+
+async def startBootstrapWrapper():
+    return await asyncio.create_task(startBootstrap())
 
 def getListData(data):
     if len(data) == 0:
