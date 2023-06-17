@@ -11,7 +11,7 @@ import ProjectAssessmentForPyScript as pa
 workingData = pd.DataFrame()
 cleanData = pd.DataFrame()
 
-def passFileData(data):
+async def passFileData(data):
     global workingData
     numericColumns = []
     textColumns = []
@@ -71,14 +71,14 @@ async def startBootstrap():
 async def startBootstrapWrapper():
     return await asyncio.create_task(startBootstrap())
 
-def getListData(data):
+async def getListData(data):
     if len(data) == 0:
         return json.dumps([])
     csvStringIO = StringIO(data)
     df = pd.read_csv(csvStringIO, sep=",")
     return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
 
-def calcMeansSDMW(listOne, listTwo):
+async def calcMeansSDMW(listOne, listTwo):
     s1 = pd.Series(listOne)
     if len(listTwo) == 0:
         return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count())])
