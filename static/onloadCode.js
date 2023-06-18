@@ -27,7 +27,7 @@ Dropzone.options.myFilter = {
         reader.addEventListener("loadend", async function (event) {
             let data = event.target.result;
             let listdata = await pyscript.interpreter.globals.get('getListData')
-            let myStudentList = JSON.parse(listdata(data));
+            let myStudentList = JSON.parse(await listdata(data));
             if (myStudentList.length > 0) {
                 rebuildGraphs(myStudentList);  
             } else {
