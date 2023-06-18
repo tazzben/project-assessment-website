@@ -44,9 +44,10 @@ def solve(dataset, summary = True, linear = False, columns = None):
     questionCode = questionCode + uniqueStudents.size
     smap = np.concatenate((uniqueStudents, uniqueQuestion), axis=None).tolist()
     data = list(zip(dataset['k'].to_numpy().flatten().tolist(), studentCode.tolist(), questionCode.tolist(), dataset['bound'].to_numpy().flatten().tolist()))
-    for i, _ in enumerate(data):
-        for col in columns:
-            data[i] = data[i] + (dataset[col].iloc[i],)
+    if len(columns) > 0:
+        for i, _ in enumerate(data):
+            for col in columns:
+                data[i] = data[i] + (dataset[col].iloc[i],)
     if linear:
         bounds = ((0, 1),) * (uniqueStudents.size + uniqueQuestion.size + len(columns))
     else:
