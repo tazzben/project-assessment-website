@@ -252,13 +252,13 @@ const requestWakeLock = async () => {
             if (wakeLock !== null && document.visibilityState === "visible" && wakeLock.released) {
                 try {
                     wakeLock = await navigator.wakeLock.request('screen');
-                } catch (err) {
-                    console.error(`${err.name}, ${err.message}`);
+                } catch (errl) {
+                    console.log(`${errl.name}, ${errl.message}`);
                 }
             }
         });
     } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
+        console.log(`${err.name}, ${err.message}`);
     }
 };
 
@@ -270,6 +270,6 @@ const releaseWakeLock = async () => {
         await wakeLock.release();
         wakeLock = null;
     } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
+        console.log(`${err.name}, ${err.message}`);
     }
 };
