@@ -24,8 +24,10 @@ async function startBootstrap(){
     $('#bootstrapProgress').text("0%");
     $('#bootstrapProgress').css("width", "0%");
     $('#newFileDiv').hide();
+    await requestWakeLock();
     let bootstrapFunction = await pyscript.interpreter.globals.get('startBootstrapWrapper');
     let response = await bootstrapFunction();
+    await releaseWakeLock();
     $("#progressFooter").hide();
     $('body').css('paddingBottom', '0px');
     $('#newFileDiv').show();
@@ -241,3 +243,29 @@ function saveStudentCSV(filename) {
     element.click();
     document.body.removeChild(element);
 }
+
+let wakeLock = null;
+const requestWakeLock = async () => {
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        document.addEventListener("visibilitychange", async () => {
+            if (wakeLock !== null && document.visibilityState === "visible") {
+              wakeLock = await navigator.wakeLock.request('screen');
+            }
+        });
+    } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+    }
+};
+
+const releaseWakeLock = async () => {
+    if (!wakeLock) {
+        return;
+    }
+    try {
+        await wakeLock.release();
+        wakeLock = null;
+    } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+    }
+};
