@@ -70,10 +70,6 @@ def calculateMarginal(position, data, estX, studentSize, questionSize, nCol, lin
         r['Average Logistic'] = [ mean(( probability(estX[x[2]], estX[x[1]], xVarEst, x[-nCol:], linear) for x in subData)) ]
         r['Average Marginal Logistic'] = [ mean(( logisticD(estX[x[2]], estX[x[1]], xVarEst, x[-nCol:], question, student, xest) for x in subData)) ]
         r['Average Discrete Marginal Logistic'] = [ mean(( mLogisticD(estX[x[2]], estX[x[1]], xVarEst, x[-nCol:], xVarPos, question, student) for x in subData)) ]
-    for b in range(0, minB+1):
-        r["ACP k=" + str(b)] = [ mean(( itemPb(estX[x[2]], estX[x[1]], b, minB, xVarEst, x[-nCol:], linear) for x in subData )) ]
-    for b in range(0, minB+1):
-        r["AME k=" + str(b)] = [ mean(( dItemPb(estX[x[2]], estX[x[1]], b, minB, xVarEst, x[-nCol:], question, student, linear, xest) for x in subData )) ]
     return pd.DataFrame(r)
 
 def calculateMarginals(data, estX, studentSize, questionSize, nCol, linear = False):

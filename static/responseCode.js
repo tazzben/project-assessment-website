@@ -24,7 +24,7 @@ async function startBootstrap(){
     $('#bootstrapProgress').text("0%");
     $('#bootstrapProgress').css("width", "0%");
     $('#newFileDiv').hide();
-    bootstrapFunction = pyscript.interpreter.globals.get('startBootstrap');
+    let bootstrapFunction = await pyscript.interpreter.globals.get('startBootstrapWrapper');
     let response = await bootstrapFunction();
     $("#progressFooter").hide();
     $('body').css('paddingBottom', '0px');
@@ -163,7 +163,7 @@ async function saveMapping() {
     let rubric = $('#rubricSelect').val();
     let data = [kValue, bound, student, rubric];
     $('#dataMapping').modal('hide');
-    passMappingData = pyscript.interpreter.globals.get('buildTable');
+    let passMappingData = await pyscript.interpreter.globals.get('buildTableWrapper');
     let response = await passMappingData(data);
     if (!response) {
         $('#alertBox').text("We were unable to estimate the model. Please try again.");

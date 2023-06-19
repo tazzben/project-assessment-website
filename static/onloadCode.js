@@ -3,13 +3,13 @@ Dropzone.options.myDropzone = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: function (file, done) {
+    accept: async function (file, done) {
         var reader = new FileReader();
         reader.addEventListener("loadend", async function (event) {
             $('#alertBox').hide();
             let data = event.target.result;
-            passFileData = pyscript.interpreter.globals.get('passFileData')
-            passFileData(data);
+            let passFileData = await pyscript.interpreter.globals.get('passFileData')
+            await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);            
         });
@@ -26,8 +26,8 @@ Dropzone.options.myFilter = {
         var reader = new FileReader();
         reader.addEventListener("loadend", async function (event) {
             let data = event.target.result;
-            listdata = pyscript.interpreter.globals.get('getListData')
-            let myStudentList = JSON.parse(listdata(data));
+            let listdata = await pyscript.interpreter.globals.get('getListData')
+            let myStudentList = JSON.parse(await listdata(data));
             if (myStudentList.length > 0) {
                 rebuildGraphs(myStudentList);  
             } else {
