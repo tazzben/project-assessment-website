@@ -59,7 +59,7 @@ function saveSvg(svgEl, name) {
     document.body.removeChild(downloadLink);
 }
 
-
+let resizeWindowTimer = null;
 
 $( document ).ready(function() {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -102,6 +102,11 @@ $( document ).ready(function() {
         saveStudentCSV('StudentEstimates.csv');
     });
 
+    $( window ).on( "resize", function() {
+        clearTimeout(resizeWindowTimer);
+        resizeWindowTimer = setTimeout(rebuildGraphsAfterResize, 1000);
+    } );
+
     $("#zoomAppointment").click(function () {
         Calendly.initPopupWidget({
           url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
@@ -115,7 +120,7 @@ $( document ).ready(function() {
     });
 
 });
-var calendlyWindow = {};
+let calendlyWindow = {};
 calendlyWindow.setChangeHash = function () {
   if (window.location.hash.replace("#", "") == "zoom") {
     Calendly.initPopupWidget({

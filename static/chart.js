@@ -222,10 +222,4 @@ async function buildGraphics(data, location='#studentKDE'){
         }
         pos += 30;
     }
-    // svg.append("text")
-    //     .attr("class", "x label")
-    //     .attr("text-anchor", "end")
-    //     .attr("x", width)
-    //     .attr("y", height - 6)
-    //     .text(data[0].label);
 }

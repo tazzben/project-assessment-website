@@ -1,10 +1,12 @@
 let savedRubric = [];
 let savedStudent = [];
+let savedFilterData = [];
 
 async function updateBootstrap(i, n) {
     let percent = Math.round((i / n) * 100);
     $('#bootstrapProgress').text(percent + "%");
-    $('#bootstrapProgress').css("width", percent + "%");    
+    $('#bootstrapProgress').css("width", percent + "%");
+    $(document).prop('title', "Bootstrap " + percent + "% Complete | Project Based Assessment"); 
 }
 
 async function startBootstrap(){
@@ -25,9 +27,11 @@ async function startBootstrap(){
     $('#bootstrapProgress').css("width", "0%");
     $('#newFileDiv').hide();
     await requestWakeLock();
+    await updateBootstrap(0, 100);
     let bootstrapFunction = await pyscript.interpreter.globals.get('startBootstrapWrapper');
     let response = await bootstrapFunction();
     await releaseWakeLock();
+    $(document).prop('title', 'Project Based Assessment');
     $("#progressFooter").hide();
     $('body').css('paddingBottom', '0px');
     $('#newFileDiv').show();
@@ -165,8 +169,10 @@ async function saveMapping() {
     let rubric = $('#rubricSelect').val();
     let data = [kValue, bound, student, rubric];
     $('#dataMapping').modal('hide');
+    await requestWakeLock();
     let passMappingData = await pyscript.interpreter.globals.get('buildTableWrapper');
     let response = await passMappingData(data);
+    await releaseWakeLock();
     if (!response) {
         $('#alertBox').text("We were unable to estimate the model. Please try again.");
         $('#alertBox').show();
@@ -183,6 +189,7 @@ async function rebuildGraphs(filterdata = []){
     } else {
         $('#clearGroupDiv').show();
     }
+    savedFilterData = filterdata;
     let graphdata = buildData(variable='Average Logistic', filterList = filterdata);
     buildGraphics(graphdata);
     let ALl1, ALl2
@@ -272,4 +279,11 @@ const releaseWakeLock = async () => {
     } catch (err) {
         console.log(`${err.name}, ${err.message}`);
     }
+};
+
+const rebuildGraphsAfterResize = () => {
+    if (savedStudent.length == 0) {
+        return;
+    }
+    rebuildGraphs(savedFilterData);
 };
