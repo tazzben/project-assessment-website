@@ -2,12 +2,12 @@ let savedRubric = [];
 let savedStudent = [];
 let savedFilterData = [];
 
-const updateBootstrap = (i, n) => {
+function updateBootstrap(i, n) {
     let percent = Math.round((i / n) * 100);
     $('#bootstrapProgress').text(percent + "%");
     $('#bootstrapProgress').css("width", percent + "%");
     $(document).prop('title', "Bootstrap " + percent + "% Complete | Project Based Assessment");
-};
+}
 
 const startBootstrap = async () => {
     if (savedRubric.length == 0) {
@@ -45,7 +45,7 @@ const startBootstrap = async () => {
     }
 };
 
-const paintAfterBootstrap = (rubricRW, errors) => {
+function paintAfterBootstrap(rubricRW, errors) {
     let rubricR = JSON.parse(rubricRW);
     paintRubricTable(rubricR, true);
     if (errors && errors > 0) {
@@ -56,9 +56,9 @@ const paintAfterBootstrap = (rubricRW, errors) => {
             $("#alertBox").slideUp(1000);
         });
     }
-};
+}
 
-const populateColForm = (num, text) => {
+function populateColForm(num, text){
     let numList = JSON.parse(num);
     let textList = JSON.parse(text);
     let colList = numList.concat(textList);
@@ -103,7 +103,7 @@ const populateColForm = (num, text) => {
         }
     }
     $('#dataMapping').modal('show');
-};
+}
 
 const paintRubricTable = (rubricR, bootstrap = false) => {
     let headerData = bootstrap ? ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic', 'Confidence Interval', 'P-Value'] : ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic'];
@@ -134,7 +134,7 @@ const paintRubricTable = (rubricR, bootstrap = false) => {
     $('#modelResults').show();
 };
 
-const paintAfterEst = (rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood) => {
+function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood) {
     $("#startBootstrap").prop("disabled", false);
     let rubricR = JSON.parse(rubricRW);
     let studentR = JSON.parse(studentRW);
@@ -167,7 +167,7 @@ const paintAfterEst = (rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, 
         $('#modelFitResults').append(m);
     }
     rebuildGraphs();
-};
+}
 
 
 const saveMapping = async () => {
