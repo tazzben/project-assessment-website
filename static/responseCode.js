@@ -74,28 +74,28 @@ function populateColForm(num, text){
     }
 
     $('#kValueSelect').empty();
-    $.each(numList, () => {
+    $.each(numList, function () {
         let kSelect = this == 'k' ? true : false;
         $('#kValueSelect').append(new Option(this, this, kSelect, kSelect));
     });
     $('#boundSelect').empty();
-    $.each(numList, () => {
+    $.each(numList, function () {
         let boundSelect = this == 'bound' ? true : false;
         $('#boundSelect').append(new Option(this, this, boundSelect, boundSelect));
     });
     $('#studentSelect').empty();
-    $.each(colList, () => {
+    $.each(colList, function () {
         let studentSelect = this == 'student' ? true : false;
         $('#studentSelect').append(new Option(this, this, studentSelect, studentSelect));
     });
     $('#rubricSelect').empty();
-    $.each(colList, () => {
+    $.each(colList, function () {
         let rubricSelect = this == 'rubric' ? true : false;
         $('#rubricSelect').append(new Option(this, this, rubricSelect, rubricSelect));
     });
     if ($("#modelResults").is(':visible')) {
         let acShown = false;
-        $(".accordion-body").each((index) => {
+        $(".accordion-body").each(function (index) {
             acShown = $(this).is(":visible") ? true : acShown;
         });
         if (!acShown) {
