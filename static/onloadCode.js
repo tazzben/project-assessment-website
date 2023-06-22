@@ -3,15 +3,15 @@ Dropzone.options.myDropzone = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: async function (file, done) {
-        var reader = new FileReader();
-        reader.addEventListener("loadend", async function (event) {
+    accept: async (file, done) => {
+        let reader = new FileReader();
+        reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
             let data = event.target.result;
             let passFileData = await pyscript.interpreter.globals.get('passFileData')
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
-            dz.removeAllFiles(true);            
+            dz.removeAllFiles(true);
         });
         reader.readAsText(file);
     }
@@ -22,34 +22,36 @@ Dropzone.options.myFilter = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: function (file, done) {
-        var reader = new FileReader();
-        reader.addEventListener("loadend", async function (event) {
+    accept: (file, done) => {
+        let reader = new FileReader();
+        reader.addEventListener("loadend", async (event) => {
             let data = event.target.result;
             let listdata = await pyscript.interpreter.globals.get('getListData')
             let myStudentList = JSON.parse(await listdata(data));
             if (myStudentList.length > 0) {
-                rebuildGraphs(myStudentList);  
+                rebuildGraphs(myStudentList);
             } else {
                 $('#alertBox').show();
                 $('#alertBox').text("The CSV file you uploaded does not contain a list of student identifiers.");
                 $('#alertBox')[0].scrollIntoView();
-                $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+                $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
                     $("#alertBox").slideUp(1000);
                 });
             }
             let dz = Dropzone.forElement("#my-filter");
-            dz.removeAllFiles(true);            
+            dz.removeAllFiles(true);
         });
         reader.readAsText(file);
     }
 };
 
-function saveSvg(svgEl, name) {
+const saveSvg = (svgEl, name) => {
     svgEl.find("svg").attr("xmlns", "http://www.w3.org/2000/svg");
     let svgData = svgEl.html();
     let preface = '<?xml version="1.0" standalone="no"?>\r\n';
-    let svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+    let svgBlob = new Blob([preface, svgData], {
+        type: "image/svg+xml;charset=utf-8"
+    });
     let svgUrl = URL.createObjectURL(svgBlob);
     let downloadLink = document.createElement("a");
     downloadLink.href = svgUrl;
@@ -57,88 +59,96 @@ function saveSvg(svgEl, name) {
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-}
+};
 
 let resizeWindowTimer = null;
 
-$( document ).ready(function() {
+$(document).ready(() => {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
-    $("#saveMapping").click(function () {
+    $("#saveMapping").click(() => {
         saveMapping();
     });
-    $("#closeMapping").click(function () {
+    $("#closeMapping").click(() => {
         $('#dataMapping').modal('hide');
     });
-    $("#closeMappingButton").click(function () {
+    $("#closeMappingButton").click(() => {
         $('#dataMapping').modal('hide');
     });
-    $("#downloadRubric").click(function () {
-        $("#rubricTable").table2csv({filename: 'rubricInformation.csv',});
+    $("#downloadRubric").click(() => {
+        $("#rubricTable").table2csv({
+            filename: 'rubricInformation.csv',
+        });
     });
-    $("#downloadFit").click(function () {
-        $("#fitTable").table2csv({filename: 'fitInformation.csv',});
+    $("#downloadFit").click(() => {
+        $("#fitTable").table2csv({
+            filename: 'fitInformation.csv',
+        });
     });
-    $("#downloadStudentML").click(function () {
-        $("#studentStatTable").table2csv({filename: 'studentAverageLogistic.csv',});
+    $("#downloadStudentML").click(() => {
+        $("#studentStatTable").table2csv({
+            filename: 'studentAverageLogistic.csv',
+        });
     });
-    $("#downloadStudentAML").click(function () {
-        $("#studentStatTableAML").table2csv({filename: 'studentAverageMarginalLogistic.csv',});    
+    $("#downloadStudentAML").click(() => {
+        $("#studentStatTableAML").table2csv({
+            filename: 'studentAverageMarginalLogistic.csv',
+        });
     });
-    $('#downloadStudentImage').click(function () {
+    $('#downloadStudentImage').click(() => {
         saveSvg($("#studentKDE"), "studentAverageLogistic.svg");
     });
-    $('#downloadStudentImageAML').click(function () {
+    $('#downloadStudentImageAML').click(() => {
         saveSvg($("#studentKDEAML"), "studentAverageMarginalLogistic.svg");
     });
-    $('#startBootstrap').click(function () {
+    $('#startBootstrap').click(() => {
         startBootstrap();
     });
-    $('#clearGroups').click(function () {
+    $('#clearGroups').click(() => {
         rebuildGraphs();
     });
-    $('.saveStudentCSV').click(function () {
+    $('.saveStudentCSV').click(() => {
         saveStudentCSV('StudentEstimates.csv');
     });
 
-    $( window ).on( "resize", function() {
+    $(window).on("resize", () => {
         clearTimeout(resizeWindowTimer);
         resizeWindowTimer = setTimeout(rebuildGraphsAfterResize, 1000);
-    } );
+    });
 
-    $("#zoomAppointment").click(function () {
+    $("#zoomAppointment").click(() => {
         Calendly.initPopupWidget({
-          url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
-          prefill: {
-            customAnswers: {
-              a1: 5,
+            url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
+            prefill: {
+                customAnswers: {
+                    a1: 5,
+                },
             },
-          },
         });
         return false;
     });
 
 });
 let calendlyWindow = {};
-calendlyWindow.setChangeHash = function () {
-  if (window.location.hash.replace("#", "") == "zoom") {
-    Calendly.initPopupWidget({
-      url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
-      prefill: {
-        customAnswers: {
-          a1: 5,
-        },
-      },
-    });
-    if (history.pushState) {
-      history.pushState(null, null, '#');
-    } else {
-      location.hash = '#';
+calendlyWindow.setChangeHash = () => {
+    if (window.location.hash.replace("#", "") == "zoom") {
+        Calendly.initPopupWidget({
+            url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
+            prefill: {
+                customAnswers: {
+                    a1: 5,
+                },
+            },
+        });
+        if (history.pushState) {
+            history.pushState(null, null, '#');
+        } else {
+            location.hash = '#';
+        }
     }
-  }
 };
 if ("onhashchange" in window) {
-  window.onhashchange = calendlyWindow.setChangeHash;
+    window.onhashchange = calendlyWindow.setChangeHash;
 }
 calendlyWindow.setChangeHash();

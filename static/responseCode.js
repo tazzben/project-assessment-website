@@ -2,19 +2,19 @@ let savedRubric = [];
 let savedStudent = [];
 let savedFilterData = [];
 
-async function updateBootstrap(i, n) {
+const updateBootstrap = (i, n) => {
     let percent = Math.round((i / n) * 100);
     $('#bootstrapProgress').text(percent + "%");
     $('#bootstrapProgress').css("width", percent + "%");
-    $(document).prop('title', "Bootstrap " + percent + "% Complete | Project Based Assessment"); 
-}
+    $(document).prop('title', "Bootstrap " + percent + "% Complete | Project Based Assessment");
+};
 
-async function startBootstrap(){
+const startBootstrap = async () => {
     if (savedRubric.length == 0) {
         $('#alertBox').text("Cannot bootstrap without the model being fit. Please try again.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
         return;
@@ -39,26 +39,26 @@ async function startBootstrap(){
         $('#alertBox').text("Bootstrap failed. Please try again.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
     }
-}
+};
 
-function paintAfterBootstrap(rubricRW, errors) {
+const paintAfterBootstrap = (rubricRW, errors) => {
     let rubricR = JSON.parse(rubricRW);
     paintRubricTable(rubricR, true);
     if (errors && errors > 0) {
         $('#alertBox').text(errors + " errors were encountered during bootstrap.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
     }
-}
+};
 
-function populateColForm(num, text) {
+const populateColForm = (num, text) => {
     let numList = JSON.parse(num);
     let textList = JSON.parse(text);
     let colList = numList.concat(textList);
@@ -67,56 +67,56 @@ function populateColForm(num, text) {
         $('#alertBox').text("The data provided does not have enough columns to estimate a model. Please try again.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
         return;
     }
-    
+
     $('#kValueSelect').empty();
-    $.each(numList, function() {
+    $.each(numList, () => {
         let kSelect = this == 'k' ? true : false;
         $('#kValueSelect').append(new Option(this, this, kSelect, kSelect));
     });
     $('#boundSelect').empty();
-    $.each(numList, function() {
+    $.each(numList, () => {
         let boundSelect = this == 'bound' ? true : false;
         $('#boundSelect').append(new Option(this, this, boundSelect, boundSelect));
     });
     $('#studentSelect').empty();
-    $.each(colList, function() {
+    $.each(colList, () => {
         let studentSelect = this == 'student' ? true : false;
         $('#studentSelect').append(new Option(this, this, studentSelect, studentSelect));
     });
     $('#rubricSelect').empty();
-    $.each(colList, function() {
+    $.each(colList, () => {
         let rubricSelect = this == 'rubric' ? true : false;
         $('#rubricSelect').append(new Option(this, this, rubricSelect, rubricSelect));
     });
-    if($("#modelResults").is(':visible')){
+    if ($("#modelResults").is(':visible')) {
         let acShown = false;
-        $(".accordion-body").each(function( index ) {
-            acShown = $(this).is(":visible") ? true : acShown ;
+        $(".accordion-body").each((index) => {
+            acShown = $(this).is(":visible") ? true : acShown;
         });
         if (!acShown) {
             $("#headingOne").find("button").click();
         }
     }
     $('#dataMapping').modal('show');
-}
+};
 
-async function paintRubricTable (rubricR, bootstrap = false) {
+const paintRubricTable = (rubricR, bootstrap = false) => {
     let headerData = bootstrap ? ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic', 'Confidence Interval', 'P-Value'] : ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic'];
     $('#rubricHeader').empty();
     for (let header of headerData) {
-        let h = document.createElement( "th" );
+        let h = document.createElement("th");
         h.setAttribute("scope", "col");
         h.textContent = header;
         $('#rubricHeader').append(h);
     }
     $('#rubricResults').empty();
     for (let row of rubricR) {
-        let r = document.createElement( "tr" );
+        let r = document.createElement("tr");
         for (let head of headerData) {
             let td = document.createElement("td");
             let content = row[head];
@@ -132,10 +132,9 @@ async function paintRubricTable (rubricR, bootstrap = false) {
         $('#rubricResults').append(r);
     }
     $('#modelResults').show();
-    
-}
+};
 
-function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood){
+const paintAfterEst = (rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood) => {
     $("#startBootstrap").prop("disabled", false);
     let rubricR = JSON.parse(rubricRW);
     let studentR = JSON.parse(studentRW);
@@ -143,9 +142,18 @@ function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, 
     savedStudent = studentR;
     paintRubricTable(rubricR);
     $('#modelFitResults').empty();
-    let paramList = [["Number of Observations", obs],["Number of Parameters", param],["AIC", AIC],["BIC", BIC],["McFadden's R^2", McFadden],["LR Statistic", LR],["Chi-Squared P-Value", ChiSquared],["Log Likelihood", LogLikelihood]];
+    let paramList = [
+        ["Number of Observations", obs],
+        ["Number of Parameters", param],
+        ["AIC", AIC],
+        ["BIC", BIC],
+        ["McFadden's R^2", McFadden],
+        ["LR Statistic", LR],
+        ["Chi-Squared P-Value", ChiSquared],
+        ["Log Likelihood", LogLikelihood]
+    ];
     for (let par of paramList) {
-        let m = document.createElement( "tr" );
+        let m = document.createElement("tr");
         let td = document.createElement("td");
         td.textContent = par[0];
         m.appendChild(td);
@@ -159,10 +167,10 @@ function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, 
         $('#modelFitResults').append(m);
     }
     rebuildGraphs();
-}
+};
 
 
-async function saveMapping() {
+const saveMapping = async () => {
     let kValue = $('#kValueSelect').val();
     let bound = $('#boundSelect').val();
     let student = $('#studentSelect').val();
@@ -177,41 +185,41 @@ async function saveMapping() {
         $('#alertBox').text("We were unable to estimate the model. Please try again.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
     }
-}
+};
 
-async function rebuildGraphs(filterdata = []){
+const rebuildGraphs = async (filterdata = []) => {
     if (filterdata.length == 0) {
         $('#clearGroupDiv').hide();
     } else {
         $('#clearGroupDiv').show();
     }
     savedFilterData = filterdata;
-    let graphdata = buildData(variable='Average Logistic', filterList = filterdata);
+    let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata);
     buildGraphics(graphdata);
-    let ALl1, ALl2
+    let ALl1, ALl2;
     [ALl1, ALl2] = getListsFromBD(graphdata);
-    buildSumTable(ALl1, ALl2, target='#StatData');
-    let graphdataAML = buildData(variable='Average Marginal Logistic', filterList = filterdata);
+    buildSumTable(ALl1, ALl2, target = '#StatData');
+    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata);
     buildGraphics(graphdataAML, '#studentKDEAML');
-    let AMLl1, AMLl2
+    let AMLl1, AMLl2;
     [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
-    buildSumTable(AMLl1, AMLl2, target='#StatDataAML');
-}
+    buildSumTable(AMLl1, AMLl2, target = '#StatDataAML');
+};
 
-function buildCSVQuote(text) {
+const buildCSVQuote = (text) => {
     return "\"" + text.replace(/"/g, "\"\"") + "\"";
-}
+};
 
-function buildCSVStudentData (){
+const buildCSVStudentData = () => {
     if (savedStudent.length == 0) {
         $('#alertBox').text("Cannot export data. Please estimate the model first.");
         $('#alertBox').show();
         $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, function(){
+        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
         return;
@@ -238,9 +246,9 @@ function buildCSVStudentData (){
         stream += "\n";
     }
     return stream;
-}
+};
 
-function saveStudentCSV(filename) {
+const saveStudentCSV = (filename) => {
     let element = document.createElement("a");
     let text = buildCSVStudentData();
     element.setAttribute("href", "data:text/csv;charset=utf-8,\uFEFF" + encodeURIComponent(text));
@@ -249,7 +257,7 @@ function saveStudentCSV(filename) {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-}
+};
 
 let wakeLock = null;
 const requestWakeLock = async () => {
