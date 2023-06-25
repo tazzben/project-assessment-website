@@ -104,19 +104,27 @@ def bootstrapRow (dataset, columns, rubric=False, linear=False):
     resultData = pd.concat(l, ignore_index=True)
     return solve(resultData, False, linear, columns)
 
-async def CallRow(dataset, rubric=False, linear=False, columns=None):
-    key = 'student' if rubric else 'rubric'
-    r = bootstrapRow(dataset, columns, rubric, linear)
+async def CallRow(row):
+    key = 'student' if row['rubric'] else 'rubric'
+    r = bootstrapRow(row['dataset'], row['columns'], row['rubric'], row['linear'])
     if r is not None:
         return (r[key], r['variables'])
     return None
 
 async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=None):
     l = []
+    rows = [
+        {
+            'dataset': dataset,
+            'rubric': rubric,
+            'linear': linear,
+            'columns': columns
+        }
+    ]*n
     nones = []    
-    for i in range(n):
+    for i, row in enumerate(rows):
         await asyncio.sleep(0)
-        result = await CallRow(dataset, rubric, linear, columns)
+        result = await CallRow(row)
         if result is not None:
             keyresult, varresult = result
             l.append(keyresult)
@@ -133,7 +141,7 @@ async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=N
 def compareKBound(x):
     return pd.to_numeric(x, downcast='integer')
 
-async def getResults(dataset: pd.DataFrame, c=0.025, rubric=False, n=1000, linear=False, columns=None, func=None):
+async def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear=False, columns=None, func=None):
     """
     Estimates the parameters of the model and produces confidence intervals for the estimates using a bootstrap method.
 
@@ -147,12 +155,15 @@ async def getResults(dataset: pd.DataFrame, c=0.025, rubric=False, n=1000, linea
         Switches the bootstrap to treating the rubric rows as blocks instead of the students.  Defaults to False.
     n : int
         Number of iterations for the bootstrap.  Defaults to 1000.
+    linear: bool
+        Uses a simple linear combination of the rubric and student items instead of a sigmoid function.  Defaults to False.
+    columns: list
+        A list of column names to include in the model.  The column names cannot be in common with any of the rubric row identifiers.  Defaults to None.
     func: function
         A function that takes two parameters, the current iteration and the total number of iterations.  This function is called after each iteration of the bootstrap.  Defaults to None.
 
     Returns:
         Tuple:
-            
             Rubric and Arbitrary Column Estimates : Pandas DataFrame
             Student Estimates : Pandas DataFrame
             Bootstrap CIs and P-Values : Pandas DataFrame
