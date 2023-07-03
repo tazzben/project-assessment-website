@@ -133,6 +133,7 @@ async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=N
                 asyncio.create_task(func(i+1, n))
         else:
             nones.append(1)
+        await asyncio.sleep(0)
     return {
         'results': pd.concat(l, ignore_index=True),
         'nones': len(nones)
