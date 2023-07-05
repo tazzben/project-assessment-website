@@ -38,7 +38,7 @@ def opRestricted (x, data, linear = False):
     vS = dem[:,0] if linear else expit(dem[:,0])
     return -np.sum(xlogy(1,  vS + (vS - 1) * dem[:,2]) + xlog1py(dem[:,1], -vS))
 
-def solve(dataset, summary = True, linear = False, columns = None):
+async def solve(dataset, summary = True, linear = False, columns = None):
     studentCode, uniqueStudents = pd.factorize(dataset['student'])
     questionCode, uniqueQuestion = pd.factorize(dataset['rubric'])
     questionCode = questionCode + uniqueStudents.size
@@ -52,7 +52,9 @@ def solve(dataset, summary = True, linear = False, columns = None):
         bounds = ((0, 1),) * (uniqueStudents.size + uniqueQuestion.size + len(columns))
     else:
         bounds = None
+    await asyncio.sleep(0)
     minValue = minimize(opFunction, np.array((1/(2*(1+dataset['k'].mean())),)*(len(smap) + len(columns)), np.dtype(float)), args=(np.array(data, np.dtype(float)), linear, len(columns)), method='Powell', bounds=bounds)
+    await asyncio.sleep(0)
     if minValue.success:
         estX = minValue.x.flatten().tolist()
         varNames = smap + columns
@@ -92,7 +94,7 @@ def solve(dataset, summary = True, linear = False, columns = None):
         return None
     raise Exception(minValue.message)
 
-def bootstrapRow (dataset, columns, rubric=False, linear=False):
+async def bootstrapRow (dataset, columns, rubric=False, linear=False):
     key = 'rubric' if rubric else 'student'
     ids = dataset[key].unique().flatten().tolist()
     randomGroupIds = np.random.choice(ids, size=len(ids), replace=True)
@@ -102,11 +104,11 @@ def bootstrapRow (dataset, columns, rubric=False, linear=False):
         rows = rows.assign(rubric=c) if rubric else rows.assign(student=c)
         l.append(rows)
     resultData = pd.concat(l, ignore_index=True)
-    return solve(resultData, False, linear, columns)
+    return await solve(resultData, False, linear, columns)
 
 async def CallRow(row):
     key = 'student' if row['rubric'] else 'rubric'
-    r = bootstrapRow(row['dataset'], row['columns'], row['rubric'], row['linear'])
+    r = await bootstrapRow(row['dataset'], row['columns'], row['rubric'], row['linear'])
     if r is not None:
         return (r[key], r['variables'])
     return None
@@ -206,7 +208,7 @@ async def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear
             raise Exception('Specified columns cannot be in common with any of the rubric row identifiers.')
     if not len(dataset.index) > 0:
         raise Exception('Invalid pandas dataset, empty dataset.')
-    estimates = solve(dataset, linear=linear, columns=columns)
+    estimates = await solve(dataset, linear=linear, columns=columns)
     nones = []
     if estimates is not None:
         l = []
