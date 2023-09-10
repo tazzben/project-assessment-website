@@ -116,39 +116,5 @@ $(document).ready(() => {
         clearTimeout(resizeWindowTimer);
         resizeWindowTimer = setTimeout(rebuildGraphsAfterResize, 1000);
     });
-
-    $("#zoomAppointment").click(() => {
-        Calendly.initPopupWidget({
-            url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
-            prefill: {
-                customAnswers: {
-                    a1: 5,
-                },
-            },
-        });
-        return false;
-    });
-
 });
-let calendlyWindow = {};
-calendlyWindow.setChangeHash = () => {
-    if (window.location.hash.replace("#", "") == "zoom") {
-        Calendly.initPopupWidget({
-            url: 'https://calendly.com/bosmith/software-help?hide_event_type_details=1',
-            prefill: {
-                customAnswers: {
-                    a1: 5,
-                },
-            },
-        });
-        if (history.pushState) {
-            history.pushState(null, null, '#');
-        } else {
-            location.hash = '#';
-        }
-    }
-};
-if ("onhashchange" in window) {
-    window.onhashchange = calendlyWindow.setChangeHash;
-}
-calendlyWindow.setChangeHash();
+
