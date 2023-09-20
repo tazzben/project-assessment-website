@@ -111,6 +111,9 @@ $(document).ready(() => {
     $('.saveStudentCSV').click(() => {
         saveStudentCSV('StudentEstimates.csv');
     });
+    $('#cancelBootstrap').click(() => {
+        cancelBootstrap();
+    });
 
     $(window).on("resize", () => {
         clearTimeout(resizeWindowTimer);

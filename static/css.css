@@ -1,7 +1,7 @@
 #rubricResults td:not(:first-child), #rubricHeader th:not(:first-child), #modelFitResults td:not(:first-child), #modelFitResults th:not(:first-child), #StatData td:not(:first-child), #StatDataAML td:not(:first-child){
     text-align: right;
 }
-div.download {
+div.download, div.cancel {
     display: block;
     text-align: right;
     margin-top: 10px;

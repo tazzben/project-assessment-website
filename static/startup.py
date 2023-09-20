@@ -27,7 +27,10 @@ async def passFileData(data):
     populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
 
 async def updateJS(i, n):
-    updateBootstrap(i, n)
+    r = updateBootstrap(i, n)
+    if r is True:
+        return True
+    return None
 
 async def buildTable(colList):
     global workingData
@@ -60,7 +63,10 @@ async def startBootstrap():
     global cleanData
     if not cleanData.empty:
         try:
-            rubricR, _, bootstrap, errors, _, _, _, _, _, _, _, _ = await pa.getResults(cleanData, func=updateJS)
+            bootstrapResults = await pa.getResults(cleanData, func=updateJS)
+            if bootstrapResults is None:
+                return None
+            rubricR, _, bootstrap, errors, _, _, _, _, _, _, _, _ = bootstrapResults
         except:
             return None
         printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')

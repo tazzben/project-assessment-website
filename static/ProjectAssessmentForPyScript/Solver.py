@@ -130,7 +130,10 @@ async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=N
             l.append(keyresult)
             l.append(varresult)
             if func is not None and (i+1) % 10 == 0:
-                asyncio.create_task(func(i+1, n))
+                feedbackTask = asyncio.create_task(func(i+1, n))
+                restultOfTask = await feedbackTask
+                if restultOfTask is True:
+                    return None
         else:
             nones.append(1)
         await asyncio.sleep(0)
@@ -212,6 +215,8 @@ async def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear
         l = []
         if n > 0:
             results = await bootstrap(dataset, n, rubric, linear=linear, columns=columns, func=func)
+            if results is None:
+                return None
             nones = results['nones']
             r = results['results']
             for var in r['Variable'].unique():

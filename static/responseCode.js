@@ -1,13 +1,24 @@
 let savedRubric = [];
 let savedStudent = [];
 let savedFilterData = [];
+let stopBootstrap = false;
 
 function updateBootstrap(i, n) {
+    if (stopBootstrap) {
+        stopBootstrap = false;
+        return true;
+    }
     let percent = Math.round((i / n) * 100);
     $('#bootstrapProgress').text(percent + "%");
     $('#bootstrapProgress').css("width", percent + "%");
     $(document).prop('title', "Bootstrap " + percent + "% Complete | Project Based Assessment");
+    return false;
 }
+
+const cancelBootstrap = () => {
+    stopBootstrap = true;
+    $("#cancelBootstrap").prop("disabled", true);
+};
 
 const startBootstrap = async () => {
     if (savedRubric.length == 0) {
@@ -21,11 +32,13 @@ const startBootstrap = async () => {
     }
     $("#startBootstrap").prop("disabled", true);
     bootstrap.Tooltip.getInstance('#startBootstrap').hide();
+    $("#cancelBootstrap").prop("disabled", false);
     $("#progressFooter").show();
     $('body').css('paddingBottom', $('#progressFooter').height() + 20 + 'px');
     $('#bootstrapProgress').text("0%");
     $('#bootstrapProgress').css("width", "0%");
     $('#newFileDiv').hide();
+    stopBootstrap = false;
     await requestWakeLock();
     await updateBootstrap(0, 100);
     let bootstrapFunction = await pyscript.interpreter.globals.get('startBootstrapWrapper');
@@ -42,6 +55,8 @@ const startBootstrap = async () => {
         $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
             $("#alertBox").slideUp(1000);
         });
+        $("#startBootstrap").prop("disabled", false);
+        $("#cancelBootstrap").prop("disabled", true);
     }
 };
 
