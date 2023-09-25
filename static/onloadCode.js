@@ -8,7 +8,6 @@ Dropzone.options.myDropzone = {
         reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
             let data = event.target.result;
-            // let passFileData = await pyscript.interpreter.globals.get('passFileData');
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
@@ -26,7 +25,6 @@ Dropzone.options.myFilter = {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             let data = event.target.result;
-            // let listdata = await pyscript.interpreter.globals.get('getListData');
             let myStudentList = JSON.parse(await getListData(data));
             if (myStudentList.length > 0) {
                 rebuildGraphs(myStudentList);
@@ -121,3 +119,6 @@ $(document).ready(() => {
     });
 });
 
+window.addEventListener("py:ready", (event) => {
+    $('#myDropZoneWrapper').show();
+});

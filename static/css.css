@@ -13,3 +13,6 @@ div.download, div.cancel {
 #clearGroupDiv {
     display: none;
 }
+#myDropZoneWrapper {
+    display: none;
+}

@@ -41,7 +41,6 @@ const startBootstrap = async () => {
     stopBootstrap = false;
     await requestWakeLock();
     await updateBootstrap(0, 100);
-    // let bootstrapFunction = await pyscript.interpreter.globals.get('startBootstrapWrapper');
     let response = await startBootstrapWrapper();
     await releaseWakeLock();
     $(document).prop('title', 'Project Based Assessment');
@@ -193,7 +192,6 @@ const saveMapping = async () => {
     let data = [kValue, bound, student, rubric];
     $('#dataMapping').modal('hide');
     await requestWakeLock();
-    // let passMappingData = await pyscript.interpreter.globals.get('buildTableWrapper');
     let response = await buildTableWrapper(data);
     await releaseWakeLock();
     if (!response) {
