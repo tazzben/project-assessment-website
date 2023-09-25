@@ -1,0 +1,6 @@
+packages = ["scipy", "pandas", "numpy"]
+
+[[fetch]]
+from = 'ProjectAssessmentForPyScript'
+files = ['__init__.py', 'Solver.py', 'Marginal.py']
+to_folder = 'ProjectAssessmentForPyScript'
