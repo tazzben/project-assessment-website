@@ -8,7 +8,9 @@ Dropzone.options.myDropzone = {
         reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
             let data = event.target.result;
+            $('#loadingDiv').show();
             await passFileData(data);
+            $('#loadingDiv').hide();
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
         });
