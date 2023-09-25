@@ -1,7 +1,7 @@
 import asyncio
 import json
 from io import StringIO
-import js
+from pyscript import window as js
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
