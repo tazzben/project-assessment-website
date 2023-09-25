@@ -120,5 +120,6 @@ $(document).ready(() => {
 });
 
 window.addEventListener("py:ready", (event) => {
+    $('#loadingDiv').hide();
     $('#myDropZoneWrapper').show();
 });
