@@ -1,7 +1,7 @@
 import asyncio
 import json
 from io import StringIO
-from js import updateBootstrap, populateColForm, paintAfterBootstrap, paintAfterEst
+import js
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
@@ -24,10 +24,10 @@ async def passFileData(data):
             elif is_numeric_dtype(df[col]):
                 numericColumns.append(col)
         workingData = df
-    populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
+    js.populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
 
 async def updateJS(i, n):
-    r = updateBootstrap(i, n)
+    r = js.updateBootstrap(i, n)
     if r is True:
         return True
     return None
@@ -52,7 +52,7 @@ async def buildTable(colList):
             rubricR, studentR, _, _, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood  = await pa.getResults(df, func=updateJS, n=0)
         except:
             return None
-        paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
+        js.paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
         return True
     return None
 
@@ -70,7 +70,7 @@ async def startBootstrap():
         except:
             return None
         printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')
-        paintAfterBootstrap(printedRubric, errors)   
+        js.paintAfterBootstrap(printedRubric, errors)   
         return True
     return None
 
@@ -91,3 +91,9 @@ async def calcMeansSDMW(listOne, listTwo):
     s2 = pd.Series(listTwo)
     _, p = mannwhitneyu(s1, s2)
     return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count()), float(s2.mean()), float(s2.std()), int(s2.count()), float(p)])
+
+js.startBootstrapWrapper = startBootstrapWrapper
+js.buildTableWrapper = buildTableWrapper
+js.calcMeansSDMW = calcMeansSDMW
+js.passFileData = passFileData
+js.getListData = getListData
