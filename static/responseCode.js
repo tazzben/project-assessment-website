@@ -192,7 +192,9 @@ const saveMapping = async () => {
     let data = [kValue, bound, student, rubric];
     $('#dataMapping').modal('hide');
     await requestWakeLock();
+    $('#loadingDiv').show();
     let response = await buildTableWrapper(data);
+    $('#loadingDiv').hide();
     await releaseWakeLock();
     if (!response) {
         $('#alertBox').text("We were unable to estimate the model. Please try again.");
