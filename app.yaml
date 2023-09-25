@@ -9,7 +9,7 @@ handlers:
   secure: always
 
 # file with defined extensions
-- url: /(.*\.(html|txt|js|py|csv|svg))
+- url: /(.*\.(html|txt|js|py|csv|svg|toml))
   static_files: static/\1
   upload: static/(.*)
   secure: always
