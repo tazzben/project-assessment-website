@@ -7,39 +7,23 @@ handlers:
   upload: static/(.*)
   expiration: "14d"
   secure: always
-  http_headers:
-    Cross-Origin-Opener-Policy: "same-origin"
-    Cross-Origin-Embedder-Policy: "require-corp"
-    Cross-Origin-Resource-Policy: "cross-origin"
 
 # file with defined extensions
 - url: /(.*\.(html|txt|js|py|csv|svg|toml))
   static_files: static/\1
   upload: static/(.*)
   secure: always
-  http_headers:
-    Cross-Origin-Opener-Policy: "same-origin"
-    Cross-Origin-Embedder-Policy: "require-corp"
-    Cross-Origin-Resource-Policy: "cross-origin"
 
 # assume file without extensions use index.html
 - url: /(.*)/
   static_files: static/\1/index.html
   upload: static/(.*)/index.html
   secure: always
-  http_headers:
-    Cross-Origin-Opener-Policy: "same-origin"
-    Cross-Origin-Embedder-Policy: "require-corp"
-    Cross-Origin-Resource-Policy: "cross-origin"
 
 - url: /
   static_files: static/index.html
   upload: static/index.html
   secure: always
-  http_headers:
-    Cross-Origin-Opener-Policy: "same-origin"
-    Cross-Origin-Embedder-Policy: "require-corp"
-    Cross-Origin-Resource-Policy: "cross-origin"
 
 - url: /.*
   script: auto
