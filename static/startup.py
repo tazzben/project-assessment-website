@@ -56,8 +56,6 @@ async def buildTable(colList):
         return True
     return None
 
-async def buildTableWrapper(colList):
-    return await asyncio.create_task(buildTable(colList))
 
 async def startBootstrap():
     global cleanData
@@ -74,9 +72,6 @@ async def startBootstrap():
         return True
     return None
 
-async def startBootstrapWrapper():
-    return await asyncio.create_task(startBootstrap())
-
 async def getListData(data):
     if len(data) == 0:
         return json.dumps([])
@@ -92,8 +87,8 @@ async def calcMeansSDMW(listOne, listTwo):
     _, p = mannwhitneyu(s1, s2)
     return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count()), float(s2.mean()), float(s2.std()), int(s2.count()), float(p)])
 
-js.startBootstrapWrapper = startBootstrapWrapper
-js.buildTableWrapper = buildTableWrapper
+js.startBootstrapWrapper = startBootstrap
+js.buildTableWrapper = buildTable
 js.calcMeansSDMW = calcMeansSDMW
 js.passFileData = passFileData
 js.getListData = getListData
