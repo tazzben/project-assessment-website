@@ -193,7 +193,7 @@ const saveMapping = async () => {
     $('#dataMapping').modal('hide');
     await requestWakeLock();
     $('#loadingDiv').show();
-    let response = await buildTableWrapper(data);
+    let response = await buildTableWrapper(JSON.stringify(data));
     $('#loadingDiv').hide();
     await releaseWakeLock();
     if (!response) {

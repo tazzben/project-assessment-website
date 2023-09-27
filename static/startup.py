@@ -56,7 +56,8 @@ async def buildTable(colList):
         return True
     return None
 
-async def buildTableWrapper(colList):
+async def buildTableWrapper(colListS):
+    colList = json.loads(colListS)
     return await asyncio.create_task(buildTable(colList))
 
 async def startBootstrap():
@@ -84,7 +85,9 @@ async def getListData(data):
     df = pd.read_csv(csvStringIO, sep=",")
     return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
 
-async def calcMeansSDMW(listOne, listTwo):
+async def calcMeansSDMW(listOneS, listTwoS):
+    listOne = json.loads(listOneS)
+    listTwo = json.loads(listTwoS)
     s1 = pd.Series(listOne)
     if len(listTwo) == 0:
         return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count())])

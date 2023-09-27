@@ -59,7 +59,7 @@ const buildData = (variable = 'Average Logistic', filterList = []) => {
 
 const buildSumTable = async (l1, l2, target = '#StatData') => {
   $(target).empty();
-  let response = await calcMeansSDMW(l1, l2);
+  let response = await calcMeansSDMW(JSON.stringify(l1), JSON.stringify(l2));
   let mean1, sd1, count1, mean2, sd2, count2, mw, textExtra, textExtra2;
   if (l2.length == 0) {
     [mean1, sd1, count1] = JSON.parse(response);
