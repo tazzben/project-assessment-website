@@ -119,7 +119,7 @@ $(document).ready(() => {
     });
 });
 
-window.addEventListener("py:ready", (event) => {
+window.addEventListener("py:all-done", (event) => {
     $('#loadingDiv').hide();
     $('#myDropZoneWrapper').show();
 });
