@@ -4,7 +4,6 @@
         "pandas",
         "numpy"
     ],
-    "interpreter": "0.23.2",
     "files": {
         "/ProjectAssessmentForPyScript/__init__.py": "./ProjectAssessmentForPyScript/__init__.py",
         "/ProjectAssessmentForPyScript/Solver.py": "./ProjectAssessmentForPyScript/Solver.py",

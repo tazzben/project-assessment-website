@@ -71,7 +71,7 @@ async def startBootstrap():
         except:
             return None
         printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')
-        js.paintAfterBootstrap(printedRubric, errors)   
+        js.paintAfterBootstrap(printedRubric, errors)
         return True
     return None
 
@@ -95,8 +95,13 @@ async def calcMeansSDMW(listOneS, listTwoS):
     _, p = mannwhitneyu(s1, s2)
     return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count()), float(s2.mean()), float(s2.std()), int(s2.count()), float(p)])
 
+async def checkCommSystem():
+    js.clearErrorMessage()
+    return True
+
 js.startBootstrapWrapper = startBootstrapWrapper
 js.buildTableWrapper = buildTableWrapper
 js.calcMeansSDMW = calcMeansSDMW
 js.passFileData = passFileData
 js.getListData = getListData
+js.checkCommSystem = checkCommSystem

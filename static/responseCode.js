@@ -2,6 +2,21 @@ let savedRubric = [];
 let savedStudent = [];
 let savedFilterData = [];
 let stopBootstrap = false;
+let showError = false;
+
+function showErrorMessage(){
+    showError = true;
+    setTimeout(() => {
+        if (showError){
+            $('#errorDiv').show();
+        }
+    }, 1000);
+}
+
+function clearErrorMessage(){
+    showError = false;
+    $('#errorDiv').hide();
+}
 
 function updateBootstrap(i, n) {
     if (stopBootstrap) {

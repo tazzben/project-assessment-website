@@ -119,7 +119,12 @@ $(document).ready(() => {
     });
 });
 
-window.addEventListener("py:all-done", (event) => {
+window.addEventListener("py:all-done", async (event) => {
     $('#loadingDiv').hide();
     $('#myDropZoneWrapper').show();
+    showErrorMessage();
+    let r = await checkCommSystem();
+    if (!r) {
+        showErrorMessage();
+    }
 });
