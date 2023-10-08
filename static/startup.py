@@ -60,7 +60,7 @@ async def buildTable(colList):
 
 async def buildTableWrapper(colListS):
     colList = json.loads(colListS)
-    return await asyncio.create_task(buildTable(colList))
+    return await buildTable(colList)
 
 async def startBootstrap():
     global cleanData
@@ -80,7 +80,7 @@ async def startBootstrap():
     return None
 
 async def startBootstrapWrapper():
-    return await asyncio.create_task(startBootstrap())
+    return await startBootstrap()
 
 async def getListData(data):
     if len(data) == 0:
