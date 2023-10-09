@@ -130,8 +130,7 @@ async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=N
             l.append(keyresult)
             l.append(varresult)
             if func is not None and (i+1) % 10 == 0:
-                feedbackTask = asyncio.create_task(func(i+1, n))
-                restultOfTask = await feedbackTask
+                restultOfTask = await func(i+1, n)
                 if restultOfTask is True:
                     return None
         else:
