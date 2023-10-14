@@ -1,4 +1,4 @@
-#rubricResults td:not(:first-child), #rubricHeader th:not(:first-child), #modelFitResults td:not(:first-child), #modelFitResults th:not(:first-child), #StatData td:not(:first-child), #StatDataAML td:not(:first-child){
+#rubricResults td:not(:first-child), #rubricHeader th:not(:first-child), #modelFitResults td:not(:first-child), #modelFitResults th:not(:first-child), #StatData td:not(:first-child), #StatDataAML td:not(:first-child), #StatDataDAML td:not(:first-child){
     text-align: right;
 }
 div.download, div.cancel {
