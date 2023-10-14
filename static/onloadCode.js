@@ -94,11 +94,19 @@ $(document).ready(() => {
             filename: 'studentAverageMarginalLogistic.csv',
         });
     });
+    $("#downloadStudentDAML").click(() => {
+        $("#studentStatTableDAML").table2csv({
+            filename: 'studentAverageDiscreteMarginalLogistic.csv',
+        });
+    });
     $('#downloadStudentImage').click(() => {
         saveSvg($("#studentKDE"), "studentAverageLogistic.svg");
     });
     $('#downloadStudentImageAML').click(() => {
         saveSvg($("#studentKDEAML"), "studentAverageMarginalLogistic.svg");
+    });
+    $('#downloadStudentImageDAML').click(() => {
+        saveSvg($("#studentKDEDAML"), "studentAverageDiscreteMarginalLogistic.svg");
     });
     $('#startBootstrap').click(() => {
         startBootstrap();

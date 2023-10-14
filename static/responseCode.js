@@ -230,16 +230,24 @@ const rebuildGraphs = async (filterdata = []) => {
         $('#clearGroupDiv').show();
     }
     savedFilterData = filterdata;
+    
     let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata);
     buildGraphics(graphdata);
     let ALl1, ALl2;
     [ALl1, ALl2] = getListsFromBD(graphdata);
     buildSumTable(ALl1, ALl2, target = '#StatData');
+    
     let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata);
     buildGraphics(graphdataAML, '#studentKDEAML');
     let AMLl1, AMLl2;
     [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
     buildSumTable(AMLl1, AMLl2, target = '#StatDataAML');
+
+    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata);
+    buildGraphics(graphdataDAML, '#studentKDEDAML');
+    let DAMLl1, DAMLl2;
+    [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
+    buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML');
 };
 
 const buildCSVQuote = (text) => {

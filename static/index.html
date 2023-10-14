@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="./css.css?ref=20230925" />
   <link rel="SHORTCUT ICON" href="./favicon.ico" />
   <script type="module" src="https://pyscript.net/snapshots/2023.09.1.RC2/core.js"></script>
-  <script src="./responseCode.js?ref=20231008"></script>
+  <script src="./responseCode.js?ref=20231014"></script>
   <script src="./chart.js?ref=20230925"></script>
 </head>
 
@@ -196,6 +196,28 @@
               </div>
             </div>
             <div class="row">
+              <div class="title">
+                <h4>Average Discrete Marginal Logistic</h4>
+              </div>
+              <div id="studentKDEDAML"></div>
+              <div class="download">
+                <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the data from the graph above."
+                  class="btn btn-secondary btn-sm saveStudentCSV">Save Data</button>
+                <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above graph as a SVG."
+                  class="btn btn-secondary btn-sm" id="downloadStudentImageDAML">Save Graph</button>
+              </div>
+              <div id="studentKDEStatDAML">
+                <table class="table" id="studentStatTableDAML">
+                  <tbody id="StatDataDAML">
+                  </tbody>
+                </table>
+                <div class="download">
+                  <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above table as a CSV."
+                    class="btn btn-secondary btn-sm" id="downloadStudentDAML">Save</button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
               <div class="download" id="clearGroupDiv">
                 <button type="button" data-bs-toggle="tooltip"
                   data-bs-title="Remove the group from the graphs and tables and treat all student estimates as one group."
@@ -267,6 +289,6 @@
   <script src="./lib/dropzone.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/d3js/7.8.5/d3.min.js"></script>
   <script src="./lib/table2csv.js"></script>
-  <script src="./onloadCode.js?ref=20231013"></script>
+  <script src="./onloadCode.js?ref=20231014"></script>
 </body>
 </html>
