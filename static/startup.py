@@ -24,6 +24,7 @@ async def passFileData(data):
             elif is_numeric_dtype(df[col]):
                 numericColumns.append(col)
         workingData = df
+    await asyncio.sleep(0)
     js.populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
 
 async def updateJS(i, n):
@@ -52,7 +53,7 @@ async def buildTable(colList):
             rubricR, studentR, _, _, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood  = await pa.getResults(df, func=updateJS, n=0)
         except:
             return None
-        asyncio.sleep(0)
+        await asyncio.sleep(0)
         js.showErrorMessage()
         js.paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
         js.clearErrorMessage()
@@ -74,7 +75,7 @@ async def startBootstrap():
         except:
             return None
         printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')
-        asyncio.sleep(0)
+        await asyncio.sleep(0)
         js.showErrorMessage()
         js.paintAfterBootstrap(printedRubric, errors)
         js.clearErrorMessage()
