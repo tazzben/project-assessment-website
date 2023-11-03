@@ -53,7 +53,9 @@ async def buildTable(colList):
         except:
             return None
         js.showErrorMessage()
-        js.paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), int(obs), int(param), float(AIC), float(BIC), float(McFadden), float(LR), float(ChiSquared), float(LogLikelihood))
+        print(rubricR.to_json(orient='records', double_precision=6))
+        print(studentR.to_json(orient='records', double_precision=6))
+        js.paintAfterEst(rubricR.to_json(orient='records', double_precision=6), studentR.to_json(orient='records', double_precision=6), int(obs), int(param), float(AIC), float(BIC), float(McFadden), float(LR), float(ChiSquared), float(LogLikelihood))
         js.clearErrorMessage()
         return True
     return None
@@ -72,7 +74,7 @@ async def startBootstrap():
             rubricR, _, bootstrap, errors, _, _, _, _, _, _, _, _ = bootstrapResults
         except:
             return None
-        printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')
+        printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records', double_precision=6)
         js.showErrorMessage()
         js.paintAfterBootstrap(printedRubric, errors)
         js.clearErrorMessage()
