@@ -53,6 +53,16 @@ async def buildTable(colList):
         except:
             return None
         js.showErrorMessage()
+        print(obs)
+        print(param)
+        print(AIC)
+        print(BIC)
+        print(McFadden)
+        print(LR)
+        print(ChiSquared)
+        print(LogLikelihood)
+        print(rubricR.to_json(orient='records'))
+        print(studentR.to_json(orient='records'))
         js.paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
         js.clearErrorMessage()
         return True
