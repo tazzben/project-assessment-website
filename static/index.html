@@ -21,7 +21,7 @@
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse d-print-none" id="navbarNav">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <a class="nav-link" href="https://docs.projectassessment.app">Docs</a>
@@ -84,7 +84,7 @@
           Rubric Information
         </button>
       </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+      <div id="collapseOne" class="accordion-collapse collapse show d-print-block" aria-labelledby="headingOne"
         data-bs-parent="#modelResults">
         <div class="accordion-body">
           <div class="container">
@@ -98,7 +98,7 @@
                   <tbody id="rubricResults">
                   </tbody>
                 </table>
-                <div class="download">
+                <div class="download d-print-none">
                   <button type="button" data-bs-toggle="tooltip"
                     data-bs-title="Calculates p-values with a block bootstrap.  This process can be slow."
                     class="btn btn-secondary btn-sm" id="startBootstrap" disabled>Start Bootstrap</button>
@@ -118,7 +118,7 @@
           Model Fit
         </button>
       </h2>
-      <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+      <div id="collapseTwo" class="accordion-collapse collapse d-print-block" aria-labelledby="headingTwo"
         data-bs-parent="#modelResults">
         <div class="accordion-body">
           <div class="container">
@@ -128,7 +128,7 @@
                   <tbody id="modelFitResults">
                   </tbody>
                 </table>
-                <div class="download">
+                <div class="download d-print-none">
                   <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above table as a CSV."
                     class="btn btn-secondary btn-sm" id="downloadFit">Save</button>
                 </div>
@@ -145,7 +145,7 @@
           Student KDE Estimates
         </button>
       </h2>
-      <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+      <div id="collapseThree" class="accordion-collapse collapse d-print-block" aria-labelledby="headingThree"
         data-bs-parent="#modelResults">
         <div class="accordion-body">
           <div class="container">
@@ -154,7 +154,7 @@
                 <h4>Average Logistic</h4>
               </div>
               <div id="studentKDE"></div>
-              <div class="download">
+              <div class="download d-print-none">
                 <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the data from the graph above."
                   class="btn btn-secondary btn-sm saveStudentCSV">Save Data</button>
                 <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above graph as a SVG."
@@ -165,7 +165,7 @@
                   <tbody id="StatData">
                   </tbody>
                 </table>
-                <div class="download">
+                <div class="download d-print-none">
                   <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above table as a CSV."
                     class="btn btn-secondary btn-sm" id="downloadStudentML">Save</button>
                 </div>
@@ -176,7 +176,7 @@
                 <h4>Average Marginal Logistic</h4>
               </div>
               <div id="studentKDEAML"></div>
-              <div class="download">
+              <div class="download d-print-none">
                 <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the data from the graph above."
                   class="btn btn-secondary btn-sm saveStudentCSV">Save Data</button>
                 <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above graph as a SVG."
@@ -187,7 +187,7 @@
                   <tbody id="StatDataAML">
                   </tbody>
                 </table>
-                <div class="download">
+                <div class="download d-print-none">
                   <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above table as a CSV."
                     class="btn btn-secondary btn-sm" id="downloadStudentAML">Save</button>
                 </div>
@@ -198,7 +198,7 @@
                 <h4>Average Discrete Marginal Logistic</h4>
               </div>
               <div id="studentKDEDAML"></div>
-              <div class="download">
+              <div class="download d-print-none">
                 <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the data from the graph above."
                   class="btn btn-secondary btn-sm saveStudentCSV">Save Data</button>
                 <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above graph as a SVG."
@@ -209,14 +209,14 @@
                   <tbody id="StatDataDAML">
                   </tbody>
                 </table>
-                <div class="download">
+                <div class="download d-print-none">
                   <button type="button" data-bs-toggle="tooltip" data-bs-title="Saves the above table as a CSV."
                     class="btn btn-secondary btn-sm" id="downloadStudentDAML">Save</button>
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="download" id="clearGroupDiv">
+              <div class="download d-print-none" id="clearGroupDiv">
                 <button type="button" data-bs-toggle="tooltip"
                   data-bs-title="Remove the group from the graphs and tables and treat all student estimates as one group."
                   class="btn btn-secondary btn-sm" id="clearGroups">Clear Groups</button>
@@ -226,7 +226,7 @@
         </div>
 
 
-        <div class="file-upload-wrapper container text-center">
+        <div class="file-upload-wrapper container text-center d-print-none">
           <form action="#" class="dropzone" id="my-filter"></form>
         </div>
       </div>
@@ -235,7 +235,7 @@
   </div>
 
 
-  <div class="container text-center" id="newFileDiv">
+  <div class="container text-center d-print-none" id="newFileDiv">
     <div class="file-upload-wrapper" id="myDropZoneWrapper">
       <form action="#" class="dropzone" id="my-dropzone"></form>
     </div>
@@ -248,19 +248,19 @@
   </div>
 
   <div class="container text-center" id="firefoxDiv" style="display: none;">
-    <div class="alert alert-primary" role="alert" >
+    <div class="alert alert-primary d-print-none" role="alert" >
       <p>This app does not support Firefox.  It might work, but if you have problems, <a href="https://docs.projectassessment.app/ferpa-technology-and-limitations">please use a supported browser such as Chrome or Safari.</a></p>
     </div>
   </div>
 
   <div class="container text-center" id="errorDiv" style="display: none;">
-    <div class="alert alert-primary" role="alert" >
+    <div class="alert alert-primary d-print-none" role="alert" >
       <p>Something loaded wrong.  You should reload/refresh the page. If this problem persists, <a href="https://docs.projectassessment.app/ferpa-technology-and-limitations">please make sure you are running a supported browser such as Chrome or Safari.</a></p>
     </div>
   </div>
 
   <div class="fixed-bottom " id="progressFooter">
-    <div class="container">
+    <div class="container d-print-none">
       <div class="row">
         <div class="col-sm">
           <div class="alert alert-secondary" role="alert">
