@@ -178,7 +178,7 @@ function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, 
         ["BIC", BIC],
         ["McFadden's R²", McFadden],
         ["LR Statistic", LR],
-        ["Chi-Squared P-Value", ChiSquared],
+        ["𝜒² p-value", ChiSquared],
         ["Log Likelihood", LogLikelihood]
     ];
     for (let par of paramList) {
