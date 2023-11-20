@@ -129,7 +129,7 @@ const buildSumTable = async (l1, l2, target = '#StatData') => {
 
     m = document.createElement("tr");
     td = document.createElement("td");
-    td.textContent = "Mann-Whitney P-Value";
+    td.textContent = "Mann-Whitney p-value";
     m.appendChild(td);
     td = document.createElement("td");
     td.textContent = Number.parseFloat(mw).toFixed(3);
