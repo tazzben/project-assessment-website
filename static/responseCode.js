@@ -176,7 +176,7 @@ function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, 
         ["Number of Parameters", param],
         ["AIC", AIC],
         ["BIC", BIC],
-        ["McFadden's R^2", McFadden],
+        ["McFadden's R²", McFadden],
         ["LR Statistic", LR],
         ["Chi-Squared P-Value", ChiSquared],
         ["Log Likelihood", LogLikelihood]
