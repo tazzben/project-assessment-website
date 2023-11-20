@@ -12,6 +12,8 @@ Dropzone.options.myDropzone = {
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
         });
+        let filename = file.name.replace(/\.[^/.]+$/, "");
+        $('#printTitleFile').text(` - ${filename}`);
         reader.readAsText(file);
     }
 };

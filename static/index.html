@@ -31,9 +31,9 @@
     </div>
   </nav>
 
-  <div class="container-fluid pl-3 pr-3 d-none d-print-block"><h3 class="display-4">
-    Project Based Assessment
-  </h3></div>
+  <div class="container-fluid pl-3 pr-3 d-none d-print-block"><h2>
+    Project Based Assessment <span id="printTitleFile"></span>
+  </h2></div>
 
   <div class="alert alert-primary" role="alert" style="display: none;" id="alertBox">
   </div>
@@ -93,9 +93,9 @@
         <div class="accordion-body">
           <div class="container">
             <div class="row">
-              <div class="d-none d-print-block"><h4 class="display-5">
+              <div class="d-none d-print-block"><h3>
                 Rubric Information
-              </h4></div>
+              </h3></div>
               <div id="rubricTableRow" class="container-sm">
                 <table class="table" id="rubricTable">
                   <thead>
@@ -130,9 +130,9 @@
         <div class="accordion-body">
           <div class="container">
             <div class="row">
-              <div class="d-none d-print-block"><h4 class="display-5">
+              <div class="d-none d-print-block"><h3>
                 Model Fit
-              </h4></div>
+              </h3></div>
               <div id="fitTableRow" class="container">
                 <table class="table" id="fitTable">
                   <tbody id="modelFitResults">
@@ -160,9 +160,9 @@
         <div class="accordion-body">
           <div class="container">
             <div class="row">
-              <div class="d-none d-print-block"><h4 class="display-5">
+              <div class="d-none d-print-block"><h3>
                 Student KDE Estimates
-              </h4></div>
+              </h3></div>
               <div class="title">
                 <h4>Average Logistic</h4>
               </div>
@@ -301,7 +301,7 @@
   <script src="./lib/table2csv.js"></script>
   <script src="./responseCode.js?ref=20231014"></script>
   <script src="./chart.js?ref=20230925"></script>
-  <script src="./onloadCode.js?ref=20231014"></script>
+  <script src="./onloadCode.js?ref=20231120"></script>
   <script type="py" src="./startup.py?ref=20231012" config="./pyscript.json" worker></script>
 </body>
 </html>
