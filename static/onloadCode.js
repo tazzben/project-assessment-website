@@ -122,6 +122,9 @@ $(document).ready(() => {
     $('#cancelBootstrap').click(() => {
         cancelBootstrap();
     });
+    $('#printSheet').click(() => {
+        window.print();
+    });
 
     $(window).on("resize", () => {
         clearTimeout(resizeWindowTimer);
