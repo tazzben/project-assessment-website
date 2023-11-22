@@ -3,10 +3,11 @@ Dropzone.options.myDropzone = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: async (file, done) => {
+    accept: async (file, _) => {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
+            console.log(event.target);
             let data = event.target.result;
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
@@ -23,7 +24,7 @@ Dropzone.options.myFilter = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: (file, done) => {
+    accept: (file, _) => {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             let data = event.target.result;

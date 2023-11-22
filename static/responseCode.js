@@ -1,6 +1,7 @@
 let savedRubric = [];
 let savedStudent = [];
 let savedFilterData = [];
+let savedFilterFileName = "";
 let stopBootstrap = false;
 let showError = false;
 
@@ -140,7 +141,7 @@ const paintRubricTable = (rubricR, bootstrap = false) => {
     for (let header of headerData) {
         let h = document.createElement("th");
         h.setAttribute("scope", "col");
-        h.textContent = header;
+        header == 'P-Value' ? h.textContent = 'p-value' : h.textContent = header;
         $('#rubricHeader').append(h);
     }
     $('#rubricResults').empty();
@@ -223,31 +224,33 @@ const saveMapping = async () => {
     }
 };
 
-const rebuildGraphs = async (filterdata = []) => {
+const rebuildGraphs = async (filterdata = [], filterFileName = "group") => {
     if (filterdata.length == 0) {
         $('#clearGroupDiv').hide();
     } else {
         $('#clearGroupDiv').show();
     }
+    filterFileName.length > 100 ? filterFileName = filterFileName.substring(0, 97) + "..." : filterFileName = filterFileName;
     savedFilterData = filterdata;
+    savedFilterFileName = filterFileName;
     
-    let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata);
+    let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdata);
     let ALl1, ALl2;
     [ALl1, ALl2] = getListsFromBD(graphdata);
-    buildSumTable(ALl1, ALl2, target = '#StatData');
+    buildSumTable(ALl1, ALl2, target = '#StatData', filterFileName = filterFileName);
     
-    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata);
+    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdataAML, '#studentKDEAML');
     let AMLl1, AMLl2;
     [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
-    buildSumTable(AMLl1, AMLl2, target = '#StatDataAML');
+    buildSumTable(AMLl1, AMLl2, target = '#StatDataAML', filterFileName = filterFileName);
 
-    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata);
+    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdataDAML, '#studentKDEDAML');
     let DAMLl1, DAMLl2;
     [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
-    buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML');
+    buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML', filterFileName = filterFileName);
 };
 
 const buildCSVQuote = (text) => {
@@ -333,5 +336,5 @@ const rebuildGraphsAfterResize = () => {
     if (savedStudent.length == 0) {
         return;
     }
-    rebuildGraphs(savedFilterData);
+    rebuildGraphs(savedFilterData, savedFilterFileName);
 };
