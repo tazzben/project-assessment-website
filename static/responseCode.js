@@ -230,7 +230,7 @@ const rebuildGraphs = async (filterdata = [], filterFileName = "group") => {
     } else {
         $('#clearGroupDiv').show();
     }
-    filterFileName.length > 100 ? filterFileName = filterFileName.substring(0, 97) + "..." : filterFileName = filterFileName;
+    filterFileName.length > 40 ? filterFileName = filterFileName.substring(0, 37) + "..." : filterFileName = filterFileName;
     savedFilterData = filterdata;
     savedFilterFileName = filterFileName;
     
