@@ -7,7 +7,7 @@ Dropzone.options.myDropzone = {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
-            console.log(event.target);
+            console.log(event);
             let data = event.target.result;
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
@@ -30,7 +30,7 @@ Dropzone.options.myFilter = {
             let data = event.target.result;
             let myStudentList = JSON.parse(await getListData(data));
             if (myStudentList.length > 0) {
-                rebuildGraphs(myStudentList);
+                rebuildGraphs(myStudentList, savedFilterFileName);
             } else {
                 $('#alertBox').show();
                 $('#alertBox').text("The CSV file you uploaded does not contain a list of student identifiers.");
@@ -42,6 +42,7 @@ Dropzone.options.myFilter = {
             let dz = Dropzone.forElement("#my-filter");
             dz.removeAllFiles(true);
         });
+        savedFilterFileName = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);
     }
 };
