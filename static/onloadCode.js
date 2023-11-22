@@ -7,7 +7,6 @@ Dropzone.options.myDropzone = {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
-            console.log(event);
             let data = event.target.result;
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
