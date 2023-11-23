@@ -229,8 +229,8 @@ const buildGraphics = async (data, location = '#studentKDE') => {
         })
       );
     if (data.length > 1) {
-      svg.append("circle").attr("cx", width - 10).attr("cy", 30 + pos).attr("r", 6).style("fill", d.stroke);
-      svg.append("text").attr("x", width - 30).attr("y", 30 + pos).attr("text-anchor", "end").text(d.chartLabel).style("font-size", "15px").attr("alignment-baseline", "middle");
+      svg.append("circle").attr("cx", width - 20).attr("cy", 30 + pos).attr("r", 6).style("fill", d.stroke);
+      svg.append("text").attr("x", width - 40).attr("y", 30 + pos).attr("text-anchor", "end").text(d.chartLabel).style("font-size", "15px").attr("alignment-baseline", "middle");
     }
     pos += 30;
   }
