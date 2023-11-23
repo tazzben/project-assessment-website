@@ -4,7 +4,7 @@ let chartWidths = {
   defaultWidthMin: 480,
   defaultWidthMax: 1300,
   printWidthMin: 480,
-  printWidthMax: 1200,
+  printWidthMax: 960,
 };
 
 const kernelDensityEstimator = (kernel, X) => {
