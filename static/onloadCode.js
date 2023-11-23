@@ -134,12 +134,16 @@ $(document).ready(() => {
     $(window).on("onbeforeprint", () => {
         chartWidths.widthMin = chartWidths.printWidthMin;
         chartWidths.widthMax = chartWidths.printWidthMax;
+        console.log("onbeforeprint");
+        console.log(chartWidths);
         rebuildGraphsAfterResize();
     });
 
     $(window).on("onafterprint", () => {
         chartWidths.widthMin = chartWidths.defaultWidthMin;
         chartWidths.widthMax = chartWidths.defaultWidthMax;
+        console.log("onafterprint");
+        console.log(chartWidths);
         rebuildGraphsAfterResize();
     });
     
