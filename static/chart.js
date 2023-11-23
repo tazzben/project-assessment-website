@@ -1,3 +1,12 @@
+let chartWidths = {
+  widthMin: 480,
+  widthMax: 1300,
+  defaultWidthMin: 480,
+  defaultWidthMax: 1300,
+  printWidthMin: 480,
+  printWidthMax: 1200,
+};
+
 const kernelDensityEstimator = (kernel, X) => {
   return (V) => {
     return X.map((x) => {
@@ -173,7 +182,7 @@ const buildGraphics = async (data, location = '#studentKDE') => {
     return;
   }
 
-  const contentWidth = Math.min(Math.max($('#rubricTableRow').width(), $('#fitTableRow').width(), $(location).width(), 480), 1320);
+  const contentWidth = Math.min(Math.max($('#rubricTableRow').width(), $('#fitTableRow').width(), $(location).width(), chartWidths.widthMin), chartWidths.widthMax);
   $(location).empty();
 
 

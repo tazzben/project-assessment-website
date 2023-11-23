@@ -132,6 +132,14 @@ $(document).ready(() => {
     });
 
     $(window).on("onbeforeprint", () => {
+        chartWidths.widthMin = chartWidths.printWidthMin;
+        chartWidths.widthMax = chartWidths.printWidthMax;
+        rebuildGraphsAfterResize();
+    });
+
+    $(window).on("onafterprint", () => {
+        chartWidths.widthMin = chartWidths.defaultWidthMin;
+        chartWidths.widthMax = chartWidths.defaultWidthMax;
         rebuildGraphsAfterResize();
     });
     
