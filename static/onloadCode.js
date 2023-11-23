@@ -130,6 +130,10 @@ $(document).ready(() => {
         clearTimeout(resizeWindowTimer);
         resizeWindowTimer = setTimeout(rebuildGraphsAfterResize, 1000);
     });
+
+    $(window).on("onbeforeprint", () => {
+        rebuildGraphsAfterResize();
+    });
     
     if (navigator.userAgent.toLowerCase().includes('firefox')){
         $('#firefoxDiv').show();
