@@ -11,10 +11,10 @@ Dropzone.options.myDropzone = {
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
+            $('#printTitleFile').text(` - ${fileNameOfResults}`);
         });
-        reader.readAsText(file);
-        let filename = file.name.replace(/\.[^/.\s\\]+$/, "");
-        $('#printTitleFile').text(` - ${filename}`);
+        fileNameOfResults = file.name.replace(/\.[^/.\s\\]+$/, "");
+        reader.readAsText(file);        
     }
 };
 

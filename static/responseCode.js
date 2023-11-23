@@ -1,9 +1,10 @@
 let savedRubric = [];
 let savedStudent = [];
 let savedFilterData = [];
-let savedFilterFileName = "";
 let stopBootstrap = false;
 let showError = false;
+let fileNameOfResults = "";
+let savedFilterFileName = "";
 
 function showErrorMessage(){
     showError = true;
