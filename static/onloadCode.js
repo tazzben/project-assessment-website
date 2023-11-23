@@ -131,7 +131,7 @@ $(document).ready(() => {
         resizeWindowTimer = setTimeout(rebuildGraphsAfterResize, 1000);
     });
 
-    $(window).on("onbeforeprint", () => {
+    $(window).on("beforeprint", () => {
         chartWidths.widthMin = chartWidths.printWidthMin;
         chartWidths.widthMax = chartWidths.printWidthMax;
         console.log("onbeforeprint");
@@ -139,7 +139,7 @@ $(document).ready(() => {
         rebuildGraphsAfterResize();
     });
 
-    $(window).on("onafterprint", () => {
+    $(window).on("afterprint", () => {
         chartWidths.widthMin = chartWidths.defaultWidthMin;
         chartWidths.widthMax = chartWidths.defaultWidthMax;
         console.log("onafterprint");
