@@ -11,7 +11,6 @@ Dropzone.options.myDropzone = {
             await passFileData(data);
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
-            $('#printTitleFile').text(` - ${fileNameOfResults}`);
         });
         fileNameOfResults = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);        

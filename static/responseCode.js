@@ -167,6 +167,7 @@ const paintRubricTable = (rubricR, bootstrap = false) => {
 
 function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood) {
     $("#startBootstrap").prop("disabled", false);
+    $('#printTitleFile').text(` - ${fileNameOfResults}`);
     let rubricR = JSON.parse(rubricRW);
     let studentR = JSON.parse(studentRW);
     savedRubric = rubricR;
