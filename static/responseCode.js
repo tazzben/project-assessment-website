@@ -226,7 +226,7 @@ const saveMapping = async () => {
     }
 };
 
-const rebuildGraphs = async (filterdata = [], filterFileName = "group") => {
+const rebuildGraphs = async (filterdata = [], filterFileName = "group", justCharts = false) => {
     if (filterdata.length == 0) {
         $('#clearGroupDiv').hide();
     } else {
@@ -238,21 +238,30 @@ const rebuildGraphs = async (filterdata = [], filterFileName = "group") => {
     
     let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdata);
-    let ALl1, ALl2;
-    [ALl1, ALl2] = getListsFromBD(graphdata);
-    buildSumTable(ALl1, ALl2, target = '#StatData', filterFileName = filterFileName);
+    
+    if (!justCharts) {
+        let ALl1, ALl2;
+        [ALl1, ALl2] = getListsFromBD(graphdata);
+        buildSumTable(ALl1, ALl2, target = '#StatData', filterFileName = filterFileName);
+    }
     
     let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdataAML, '#studentKDEAML');
-    let AMLl1, AMLl2;
-    [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
-    buildSumTable(AMLl1, AMLl2, target = '#StatDataAML', filterFileName = filterFileName);
-
+    
+    if (!justCharts) {
+        let AMLl1, AMLl2;
+        [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
+        buildSumTable(AMLl1, AMLl2, target = '#StatDataAML', filterFileName = filterFileName);
+    }
+    
     let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdataDAML, '#studentKDEDAML');
-    let DAMLl1, DAMLl2;
-    [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
-    buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML', filterFileName = filterFileName);
+    
+    if (!justCharts) {
+        let DAMLl1, DAMLl2;
+        [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
+        buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML', filterFileName = filterFileName);
+    }
 };
 
 const buildCSVQuote = (text) => {
@@ -338,5 +347,5 @@ const rebuildGraphsAfterResize = () => {
     if (savedStudent.length == 0) {
         return;
     }
-    rebuildGraphs(savedFilterData, savedFilterFileName);
+    rebuildGraphs(savedFilterData, savedFilterFileName, justCharts = true);
 };
