@@ -3,6 +3,8 @@ let savedStudent = [];
 let savedFilterData = [];
 let stopBootstrap = false;
 let showError = false;
+let fileNameOfResults = "";
+let savedFilterFileName = "";
 
 function showErrorMessage(){
     showError = true;
@@ -140,7 +142,7 @@ const paintRubricTable = (rubricR, bootstrap = false) => {
     for (let header of headerData) {
         let h = document.createElement("th");
         h.setAttribute("scope", "col");
-        h.textContent = header;
+        header == 'P-Value' ? h.textContent = 'p-value' : h.textContent = header;
         $('#rubricHeader').append(h);
     }
     $('#rubricResults').empty();
@@ -165,6 +167,7 @@ const paintRubricTable = (rubricR, bootstrap = false) => {
 
 function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood) {
     $("#startBootstrap").prop("disabled", false);
+    $('#printTitleFile').text(` - ${fileNameOfResults}`);
     let rubricR = JSON.parse(rubricRW);
     let studentR = JSON.parse(studentRW);
     savedRubric = rubricR;
@@ -176,9 +179,9 @@ function paintAfterEst(rubricRW, studentRW, obs, param, AIC, BIC, McFadden, LR, 
         ["Number of Parameters", param],
         ["AIC", AIC],
         ["BIC", BIC],
-        ["McFadden's R^2", McFadden],
+        ["McFadden's R²", McFadden],
         ["LR Statistic", LR],
-        ["Chi-Squared P-Value", ChiSquared],
+        ["𝜒² p-value", ChiSquared],
         ["Log Likelihood", LogLikelihood]
     ];
     for (let par of paramList) {
@@ -223,31 +226,42 @@ const saveMapping = async () => {
     }
 };
 
-const rebuildGraphs = async (filterdata = []) => {
+const rebuildGraphs = async (filterdata = [], filterFileName = "group", justCharts = false) => {
     if (filterdata.length == 0) {
         $('#clearGroupDiv').hide();
     } else {
         $('#clearGroupDiv').show();
     }
+    filterFileName.length > 40 ? filterFileName = filterFileName.substring(0, 37) + "..." : filterFileName = filterFileName;
     savedFilterData = filterdata;
+    savedFilterFileName = filterFileName;
     
-    let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata);
+    let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdata);
-    let ALl1, ALl2;
-    [ALl1, ALl2] = getListsFromBD(graphdata);
-    buildSumTable(ALl1, ALl2, target = '#StatData');
     
-    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata);
+    if (!justCharts) {
+        let ALl1, ALl2;
+        [ALl1, ALl2] = getListsFromBD(graphdata);
+        buildSumTable(ALl1, ALl2, target = '#StatData', filterFileName = filterFileName);
+    }
+    
+    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdataAML, '#studentKDEAML');
-    let AMLl1, AMLl2;
-    [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
-    buildSumTable(AMLl1, AMLl2, target = '#StatDataAML');
-
-    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata);
+    
+    if (!justCharts) {
+        let AMLl1, AMLl2;
+        [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
+        buildSumTable(AMLl1, AMLl2, target = '#StatDataAML', filterFileName = filterFileName);
+    }
+    
+    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
     buildGraphics(graphdataDAML, '#studentKDEDAML');
-    let DAMLl1, DAMLl2;
-    [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
-    buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML');
+    
+    if (!justCharts) {
+        let DAMLl1, DAMLl2;
+        [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
+        buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML', filterFileName = filterFileName);
+    }
 };
 
 const buildCSVQuote = (text) => {
@@ -333,5 +347,5 @@ const rebuildGraphsAfterResize = () => {
     if (savedStudent.length == 0) {
         return;
     }
-    rebuildGraphs(savedFilterData);
+    rebuildGraphs(savedFilterData, savedFilterFileName, justCharts = true);
 };

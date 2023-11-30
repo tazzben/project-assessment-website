@@ -1,3 +1,12 @@
+let chartWidths = {
+  widthMin: 480,
+  widthMax: 1300,
+  defaultWidthMin: 480,
+  defaultWidthMax: 1300,
+  printWidthMin: 480,
+  printWidthMax: 920,
+};
+
 const kernelDensityEstimator = (kernel, X) => {
   return (V) => {
     return X.map((x) => {
@@ -20,7 +29,7 @@ const getStandardDeviation = (array) => {
   return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
 };
 
-const buildData = (variable = 'Average Logistic', filterList = []) => {
+const buildData = (variable = 'Average Logistic', filterList = [], filterFileName = "group") => {
   let l = [];
   if (filterList.length == 0) {
     let obj = {};
@@ -41,7 +50,7 @@ const buildData = (variable = 'Average Logistic', filterList = []) => {
     obj['data'] = d;
     obj['stroke'] = '#0d6efd';
     obj['label'] = variable;
-    obj['chartLabel'] = "Students in group";
+    obj['chartLabel'] = "Students in " + filterFileName;
     l.push(obj);
   }
 
@@ -51,13 +60,13 @@ const buildData = (variable = 'Average Logistic', filterList = []) => {
     obj2['data'] = d2;
     obj2['stroke'] = '#adb5bd';
     obj2['label'] = variable;
-    obj2['chartLabel'] = "Students not in group";
+    obj2['chartLabel'] = "Students not in " + filterFileName;
     l.push(obj2);
   }
   return l;
 };
 
-const buildSumTable = async (l1, l2, target = '#StatData') => {
+const buildSumTable = async (l1, l2, target = '#StatData', filterFileName = "group") => {
   $(target).empty();
   let response = await calcMeansSDMW(JSON.stringify(l1), JSON.stringify(l2));
   let mean1, sd1, count1, mean2, sd2, count2, mw, textExtra, textExtra2;
@@ -67,8 +76,8 @@ const buildSumTable = async (l1, l2, target = '#StatData') => {
     textExtra2 = "";
   } else {
     [mean1, sd1, count1, mean2, sd2, count2, mw] = JSON.parse(response);
-    textExtra = " of students in group";
-    textExtra2 = " of students not in group";
+    textExtra = " of students in " + filterFileName;
+    textExtra2 = " of students not in " + filterFileName;
   }
 
   let m = document.createElement("tr");
@@ -129,7 +138,7 @@ const buildSumTable = async (l1, l2, target = '#StatData') => {
 
     m = document.createElement("tr");
     td = document.createElement("td");
-    td.textContent = "Mann-Whitney P-Value";
+    td.textContent = "Mann-Whitney p-value";
     m.appendChild(td);
     td = document.createElement("td");
     td.textContent = Number.parseFloat(mw).toFixed(3);
@@ -173,7 +182,7 @@ const buildGraphics = async (data, location = '#studentKDE') => {
     return;
   }
 
-  const contentWidth = Math.min(Math.max($('#rubricTableRow').width(), $('#fitTableRow').width(), $(location).width(), 480), 1320);
+  const contentWidth = Math.min(Math.max($('#rubricTableRow').width(), $('#fitTableRow').width(), $(location).width(), chartWidths.widthMin), chartWidths.widthMax);
   $(location).empty();
 
 
@@ -229,8 +238,8 @@ const buildGraphics = async (data, location = '#studentKDE') => {
         })
       );
     if (data.length > 1) {
-      svg.append("circle").attr("cx", width - 150).attr("cy", 30 + pos).attr("r", 6).style("fill", d.stroke);
-      svg.append("text").attr("x", width - 130).attr("y", 30 + pos).text(d.chartLabel).style("font-size", "15px").attr("alignment-baseline", "middle");
+      svg.append("circle").attr("cx", width - 20).attr("cy", 30 + pos).attr("r", 6).style("fill", d.stroke);
+      svg.append("text").attr("x", width - 40).attr("y", 30 + pos).attr("text-anchor", "end").text(d.chartLabel).style("font-size", "15px").attr("alignment-baseline", "middle");
     }
     pos += 30;
   }

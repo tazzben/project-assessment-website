@@ -3,7 +3,7 @@ Dropzone.options.myDropzone = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: async (file, done) => {
+    accept: async (file, _) => {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             $('#alertBox').hide();
@@ -12,7 +12,8 @@ Dropzone.options.myDropzone = {
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
         });
-        reader.readAsText(file);
+        fileNameOfResults = file.name.replace(/\.[^/.\s\\]+$/, "");
+        reader.readAsText(file);        
     }
 };
 
@@ -21,13 +22,13 @@ Dropzone.options.myFilter = {
     maxFilesize: 10,
     maxFiles: 1,
     acceptedFiles: ".csv",
-    accept: (file, done) => {
+    accept: (file, _) => {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             let data = event.target.result;
             let myStudentList = JSON.parse(await getListData(data));
             if (myStudentList.length > 0) {
-                rebuildGraphs(myStudentList);
+                rebuildGraphs(myStudentList, savedFilterFileName);
             } else {
                 $('#alertBox').show();
                 $('#alertBox').text("The CSV file you uploaded does not contain a list of student identifiers.");
@@ -39,6 +40,7 @@ Dropzone.options.myFilter = {
             let dz = Dropzone.forElement("#my-filter");
             dz.removeAllFiles(true);
         });
+        savedFilterFileName = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);
     }
 };
@@ -120,10 +122,25 @@ $(document).ready(() => {
     $('#cancelBootstrap').click(() => {
         cancelBootstrap();
     });
+    $('#printSheet').click(() => {
+        window.print();
+    });
 
     $(window).on("resize", () => {
         clearTimeout(resizeWindowTimer);
         resizeWindowTimer = setTimeout(rebuildGraphsAfterResize, 1000);
+    });
+
+    $(window).on("beforeprint", () => {
+        chartWidths.widthMin = chartWidths.printWidthMin;
+        chartWidths.widthMax = chartWidths.printWidthMax;
+        rebuildGraphsAfterResize();
+    });
+
+    $(window).on("afterprint", () => {
+        chartWidths.widthMin = chartWidths.defaultWidthMin;
+        chartWidths.widthMax = chartWidths.defaultWidthMax;
+        rebuildGraphsAfterResize();
     });
     
     if (navigator.userAgent.toLowerCase().includes('firefox')){
