@@ -35,7 +35,6 @@ Dropzone.options.myFilter = {
                 }
                 savedFilterFileNames.push(event.target.fileName);
                 savedFilterData.push(myStudentList);
-                rebuildGraphs(savedFilterData, savedFilterFileNames);
             } else {
                 $('#alertBox').show();
                 $('#alertBox').text("The CSV file you uploaded does not contain a list of student identifiers.");
@@ -44,11 +43,16 @@ Dropzone.options.myFilter = {
                     $("#alertBox").slideUp(1000);
                 });
             }
-            let dz = Dropzone.forElement("#my-filter");
-            dz.removeAllFiles(true);
         });
         reader.fileName = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);
+    },
+    init: function () {
+        this.on("queuecomplete", function (_) {
+            let dz = Dropzone.forElement("#my-filter");
+            dz.removeAllFiles(true);
+            rebuildGraphs(savedFilterData, savedFilterFileNames);
+        });
     }
 };
 
