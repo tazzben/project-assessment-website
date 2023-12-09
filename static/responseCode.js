@@ -5,7 +5,6 @@ let stopBootstrap = false;
 let showError = false;
 let fileNameOfResults = "";
 let savedFilterFileNames = [];
-let fileNameOfFilter = "";
 
 function showErrorMessage(){
     showError = true;

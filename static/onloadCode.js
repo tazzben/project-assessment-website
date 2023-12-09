@@ -9,10 +9,11 @@ Dropzone.options.myDropzone = {
             $('#alertBox').hide();
             let data = event.target.result;
             await passFileData(data);
+            fileNameOfResults = event.target.fileName;
             let dz = Dropzone.forElement("#my-dropzone");
             dz.removeAllFiles(true);
         });
-        fileNameOfResults = file.name.replace(/\.[^/.\s\\]+$/, "");
+        reader.fileName = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);        
     }
 };
@@ -20,15 +21,19 @@ Dropzone.options.myDropzone = {
 Dropzone.options.myFilter = {
     dictDefaultMessage: "Drag a CSV here to make a separate group of students in the graphs.",
     maxFilesize: 10,
-    maxFiles: 1,
+    maxFiles: 5,
     acceptedFiles: ".csv",
     accept: (file, _) => {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
             let data = event.target.result;
             let myStudentList = JSON.parse(await getListData(data));
-            if (myStudentList.length > 0) {
-                savedFilterFileNames.push(fileNameOfFilter);
+            if (myStudentList.length > 0 && savedStudent.length > 0) {
+                if (typeof savedStudent[0]['Variable'] != typeof myStudentList[0]) {
+                    const convertFunc = typeof savedStudent[0]['Variable'] == 'number' ? Number : String;
+                    myStudentList = myStudentList.map(convertFunc);
+                }
+                savedFilterFileNames.push(event.target.fileName);
                 savedFilterData.push(myStudentList);
                 rebuildGraphs(savedFilterData, savedFilterFileNames);
             } else {
@@ -42,7 +47,7 @@ Dropzone.options.myFilter = {
             let dz = Dropzone.forElement("#my-filter");
             dz.removeAllFiles(true);
         });
-        fileNameOfFilter = file.name.replace(/\.[^/.\s\\]+$/, "");
+        reader.fileName = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);
     }
 };
