@@ -29,9 +29,9 @@ const getStandardDeviation = (array) => {
   return Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
 };
 
-const buildData = (variable = 'Average Logistic', filterList = [], filterFileName = "group") => {
+const buildData = (variable = 'Average Logistic', filterLists = [], filterFileNames = []) => {
   let l = [];
-  if (filterList.length == 0) {
+  if (filterLists.length == 0) {
     let obj = {};
     let d = savedStudent.map(x => x[variable]);
     if (d.length > 1) {
@@ -42,125 +42,83 @@ const buildData = (variable = 'Average Logistic', filterList = [], filterFileNam
     }
     return l;
   }
-  let inList = savedStudent.filter(x => filterList.includes(x['Variable']));
-  let outList = savedStudent.filter(x => !filterList.includes(x['Variable']));
-  let obj = {};
-  let d = inList.map(x => x[variable]);
-  if (d.length > 1) {
-    obj['data'] = d;
-    obj['stroke'] = '#0d6efd';
-    obj['label'] = variable;
-    obj['chartLabel'] = "Students in " + filterFileName;
-    l.push(obj);
+  let pos = 0;
+  let colors = ['#0d6efd', '#5D35DB', '#3543DB', '#35ACDB', '#9335DB'];
+  for (const filterList of filterLists) {
+    let inList = savedStudent.filter(x => filterList.includes(x['Variable']));
+    let obj = {};
+    let d = inList.map(x => x[variable]);
+    if (d.length > 1) {
+      obj['data'] = d;
+      obj['stroke'] = colors[pos % colors.length];
+      obj['label'] = variable;
+      obj['chartLabel'] = "Students in " + filterFileNames[pos];
+      l.push(obj);
+    }
+    pos++;
   }
-
+  let outList = savedStudent.filter(x => !filterLists.flat().includes(x['Variable']));
   let obj2 = {};
   let d2 = outList.map(x => x[variable]);
   if (d2.length > 1) {
     obj2['data'] = d2;
     obj2['stroke'] = '#adb5bd';
     obj2['label'] = variable;
-    obj2['chartLabel'] = "Students not in " + filterFileName;
+    obj2['chartLabel'] = "Students not in group";
     l.push(obj2);
   }
   return l;
 };
 
-const buildSumTable = async (l1, l2, target = '#StatData', filterFileName = "group") => {
+const buildSumTable = async (l = [], target = '#StatData', filterFileNames = []) => {
   $(target).empty();
-  let response = await calcMeansSDMW(JSON.stringify(l1), JSON.stringify(l2));
-  let mean1, sd1, count1, mean2, sd2, count2, mw, textExtra, textExtra2;
-  if (l2.length == 0) {
-    [mean1, sd1, count1] = JSON.parse(response);
-    textExtra = "";
-    textExtra2 = "";
-  } else {
-    [mean1, sd1, count1, mean2, sd2, count2, mw] = JSON.parse(response);
-    textExtra = " of students in " + filterFileName;
-    textExtra2 = " of students not in " + filterFileName;
+  const [response, p] = await calcMeansSDMW(...l.map(x => JSON.stringify(x)));
+  const res = JSON.parse(response);
+  let posL = 0; 
+  const resLength = res.length;
+  for (const rowItem of res) {
+    let textExtra = "";
+    if (resLength > 1 && posL < resLength - 1) {
+      textExtra = " of students in " + filterFileNames[posL];
+    } else if (resLength - 1 == posL && resLength > 1) {
+      textExtra = " of students not in group";
+    }
+    let pos = 0;
+    for (const item of ["Mean", "Standard Deviation", "# of Estimates"]) {
+      let m = document.createElement("tr");
+      let td = document.createElement("td");
+      td.textContent = item + textExtra;
+      m.appendChild(td);
+      td = document.createElement("td");
+      const round = pos == 2 ? 0 : 3;
+      td.textContent = Number.parseFloat(rowItem[pos]).toFixed(round);
+      m.appendChild(td);
+      $(target).append(m);
+      pos++;
+    }
+    posL++;
   }
 
-  let m = document.createElement("tr");
-  let td = document.createElement("td");
-  td.textContent = "Mean" + textExtra;
-  m.appendChild(td);
-  td = document.createElement("td");
-  td.textContent = Number.parseFloat(mean1).toFixed(3);
-  m.appendChild(td);
-  $(target).append(m);
-
-  m = document.createElement("tr");
-  td = document.createElement("td");
-  td.textContent = "Standard Deviation" + textExtra;
-  m.appendChild(td);
-  td = document.createElement("td");
-  td.textContent = Number.parseFloat(sd1).toFixed(3);
-  m.appendChild(td);
-  $(target).append(m);
-
-  m = document.createElement("tr");
-  td = document.createElement("td");
-  td.textContent = "# of Estimates" + textExtra;
-  m.appendChild(td);
-  td = document.createElement("td");
-  td.textContent = Number.parseFloat(count1).toFixed(0);
-  m.appendChild(td);
-  $(target).append(m);
-
-
-  if (l2.length > 0) {
-    m = document.createElement("tr");
-    td = document.createElement("td");
-    td.textContent = "Mean" + textExtra2;
+  if (resLength > 1) {
+    let m = document.createElement("tr");
+    let td = document.createElement("td");
+    td.textContent = resLength > 2 ?  "Kruskal-Wallis p-value" : "Mann-Whitney p-value";
     m.appendChild(td);
     td = document.createElement("td");
-    td.textContent = Number.parseFloat(mean2).toFixed(3);
-    m.appendChild(td);
-    $(target).append(m);
-
-    m = document.createElement("tr");
-    td = document.createElement("td");
-    td.textContent = "Standard Deviation" + textExtra2;
-    m.appendChild(td);
-    td = document.createElement("td");
-    td.textContent = Number.parseFloat(sd2).toFixed(3);
-    m.appendChild(td);
-    $(target).append(m);
-
-    m = document.createElement("tr");
-    td = document.createElement("td");
-    td.textContent = "# of Estimates" + textExtra2;
-    m.appendChild(td);
-    td = document.createElement("td");
-    td.textContent = Number.parseFloat(count2).toFixed(0);
-    m.appendChild(td);
-    $(target).append(m);
-
-    m = document.createElement("tr");
-    td = document.createElement("td");
-    td.textContent = "Mann-Whitney p-value";
-    m.appendChild(td);
-    td = document.createElement("td");
-    td.textContent = Number.parseFloat(mw).toFixed(3);
+    td.textContent = Number.parseFloat(p).toFixed(3);
     m.appendChild(td);
     $(target).append(m);
   }
 };
 
 const getListsFromBD = (data) => {
-  let l1 = [];
-  let l2 = [];
+  let lists = [];
   for (let i = 0; i < data.length; i++) {
     if (data[i].data.length > 1) {
-      if (i == 0) {
-        l1 = data[i].data;
-      }
-      if (i == 1) {
-        l2 = data[i].data;
-      }
+      lists.push(data[i].data);
     }
   }
-  return [l1, l2];
+  return lists;
 };
 
 

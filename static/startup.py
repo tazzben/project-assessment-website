@@ -5,7 +5,7 @@ from pyscript import window as js
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
-from scipy.stats import mannwhitneyu
+from scipy.stats import mannwhitneyu, kruskal
 import ProjectAssessmentForPyScript as pa
 
 workingData = pd.DataFrame()
@@ -89,15 +89,16 @@ async def getListData(data):
     df = pd.read_csv(csvStringIO, sep=",")
     return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
 
-async def calcMeansSDMW(listOneS, listTwoS):
-    listOne = json.loads(listOneS)
-    listTwo = json.loads(listTwoS)
-    s1 = pd.Series(listOne)
-    if len(listTwo) == 0:
-        return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count())])
-    s2 = pd.Series(listTwo)
-    _, p = mannwhitneyu(s1, s2)
-    return json.dumps([float(s1.mean()), float(s1.std()), int(s1.count()), float(s2.mean()), float(s2.std()), int(s2.count()), float(p)])
+async def calcMeansSDMW(*args):
+    results = []
+    r = []
+    for arg in args:
+        listData = json.loads(arg)
+        s = pd.Series(listData)
+        r.append(s)
+        results.append([float(s.mean()), float(s.std()), int(s.count())])
+    _, p = mannwhitneyu(*r) if len(results) == 2 else kruskal(*r) if len(results) > 2 else (None, None)
+    return json.dumps(results), p
 
 async def checkCommSystem():
     js.clearErrorMessage()

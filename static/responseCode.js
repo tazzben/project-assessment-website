@@ -4,7 +4,8 @@ let savedFilterData = [];
 let stopBootstrap = false;
 let showError = false;
 let fileNameOfResults = "";
-let savedFilterFileName = "";
+let savedFilterFileNames = [];
+let fileNameOfFilter = "";
 
 function showErrorMessage(){
     showError = true;
@@ -226,41 +227,37 @@ const saveMapping = async () => {
     }
 };
 
-const rebuildGraphs = async (filterdata = [], filterFileName = "group", justCharts = false) => {
+const rebuildGraphs = async (filterdata = [], filterFileNames = [], justCharts = false) => {
     if (filterdata.length == 0) {
         $('#clearGroupDiv').hide();
     } else {
         $('#clearGroupDiv').show();
     }
-    filterFileName.length > 40 ? filterFileName = filterFileName.substring(0, 37) + "..." : filterFileName = filterFileName;
+    filterFileNames = filterFileNames.map(name => {
+        return name.length > 40 ? name.substring(0, 37) + "..." : name;
+    });
     savedFilterData = filterdata;
-    savedFilterFileName = filterFileName;
+    savedFilterFileNames = filterFileNames;
     
-    let graphdata = buildData(variable = 'Average Logistic', filterList = filterdata, filterFileName = filterFileName);
+    let graphdata = buildData(variable = 'Average Logistic', filterLists = filterdata, filterFileNames = filterFileNames);
     buildGraphics(graphdata);
     
     if (!justCharts) {
-        let ALl1, ALl2;
-        [ALl1, ALl2] = getListsFromBD(graphdata);
-        buildSumTable(ALl1, ALl2, target = '#StatData', filterFileName = filterFileName);
+        buildSumTable(getListsFromBD(graphdata), target = '#StatData', filterFileNames = filterFileNames);
     }
     
-    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
+    let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterLists = filterdata, filterFileNames = filterFileNames);
     buildGraphics(graphdataAML, '#studentKDEAML');
     
     if (!justCharts) {
-        let AMLl1, AMLl2;
-        [AMLl1, AMLl2] = getListsFromBD(graphdataAML);
-        buildSumTable(AMLl1, AMLl2, target = '#StatDataAML', filterFileName = filterFileName);
+        buildSumTable(getListsFromBD(graphdataAML), target = '#StatDataAML', filterFileNames = filterFileNames);
     }
     
-    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterList = filterdata, filterFileName = filterFileName);
+    let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterLists = filterdata, filterFileNames = filterFileNames);
     buildGraphics(graphdataDAML, '#studentKDEDAML');
     
     if (!justCharts) {
-        let DAMLl1, DAMLl2;
-        [DAMLl1, DAMLl2] = getListsFromBD(graphdataDAML);
-        buildSumTable(DAMLl1, DAMLl2, target = '#StatDataDAML', filterFileName = filterFileName);
+        buildSumTable(getListsFromBD(graphdataDAML), target = '#StatDataDAML', filterFileNames = filterFileNames);
     }
 };
 
@@ -347,5 +344,5 @@ const rebuildGraphsAfterResize = () => {
     if (savedStudent.length == 0) {
         return;
     }
-    rebuildGraphs(savedFilterData, savedFilterFileName, justCharts = true);
+    rebuildGraphs(savedFilterData, savedFilterFileNames, justCharts = true);
 };
