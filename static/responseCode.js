@@ -311,19 +311,13 @@ const saveStudentCSV = (filename) => {
 
 let wakeLock = null;
 const requestWakeLock = async () => {
-    try {
+    if (navigator.wakeLock){
         wakeLock = await navigator.wakeLock.request('screen');
         document.addEventListener("visibilitychange", async () => {
             if (wakeLock !== null && document.visibilityState === "visible" && wakeLock.released) {
-                try {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                } catch (errl) {
-                    console.log(`${errl.name}, ${errl.message}`);
-                }
+                wakeLock = await navigator.wakeLock.request('screen');
             }
         });
-    } catch (err) {
-        console.log(`${err.name}, ${err.message}`);
     }
 };
 
@@ -331,12 +325,8 @@ const releaseWakeLock = async () => {
     if (!wakeLock) {
         return;
     }
-    try {
-        await wakeLock.release();
-        wakeLock = null;
-    } catch (err) {
-        console.log(`${err.name}, ${err.message}`);
-    }
+    await wakeLock.release();
+    wakeLock = null;
 };
 
 const rebuildGraphsAfterResize = () => {

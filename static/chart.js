@@ -43,7 +43,7 @@ const buildData = (variable = 'Average Logistic', filterLists = [], filterFileNa
     return l;
   }
   let pos = 0;
-  let colors = ['#0D6EFD', '#5D35DB', '#3543DB', '#35ACDB', '#9335DB', '#FC290D', '#000000', '#A83798', '#47856D'];
+  let colors = ['#0D6EFD', '#5D35DB', '#FC290D', '#000000', '#A83798', '#47856D', '#3543DB', '#35ACDB', '#9335DB'];
   for (const filterList of filterLists) {
     let inList = savedStudent.filter(x => filterList.includes(x['Variable']));
     let obj = {};
