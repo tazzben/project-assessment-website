@@ -36,14 +36,14 @@ const buildData = (variable = 'Average Logistic', filterLists = [], filterFileNa
     let d = savedStudent.map(x => x[variable]);
     if (d.length > 1) {
       obj['data'] = d;
-      obj['stroke'] = '#0d6efd';
+      obj['stroke'] = '#0D6EFD';
       obj['label'] = variable;
       l.push(obj);
     }
     return l;
   }
   let pos = 0;
-  let colors = ['#0d6efd', '#5D35DB', '#3543DB', '#35ACDB', '#9335DB'];
+  let colors = ['#0D6EFD', '#5D35DB', '#3543DB', '#35ACDB', '#9335DB', '#FC290D', '#000000', '#A83798', '#47856D'];
   for (const filterList of filterLists) {
     let inList = savedStudent.filter(x => filterList.includes(x['Variable']));
     let obj = {};
@@ -62,9 +62,9 @@ const buildData = (variable = 'Average Logistic', filterLists = [], filterFileNa
   let d2 = outList.map(x => x[variable]);
   if (d2.length > 1) {
     obj2['data'] = d2;
-    obj2['stroke'] = '#adb5bd';
+    obj2['stroke'] = '#ADB5BD';
     obj2['label'] = variable;
-    obj2['chartLabel'] = "Students not in group";
+    obj2['chartLabel'] = "Students not in " + (filterFileNames.length > 1 ? "any group" : filterFileNames[0]);
     l.push(obj2);
   }
   return l;
@@ -81,7 +81,7 @@ const buildSumTable = async (l = [], target = '#StatData', filterFileNames = [])
     if (resLength > 1 && posL < resLength - 1) {
       textExtra = " of students in " + filterFileNames[posL];
     } else if (resLength - 1 == posL && resLength > 1) {
-      textExtra = " of students not in group";
+      textExtra = " of students not in " + (filterFileNames.length > 1 ? "any group" : filterFileNames[0]);
     }
     let pos = 0;
     for (const item of ["Mean", "Standard Deviation", "# of Estimates"]) {
