@@ -78,9 +78,9 @@ const buildSumTable = async (l = [], target = '#StatData', filterFileNames = [])
   const resLength = res.length;
   for (const rowItem of res) {
     let textExtra = "";
-    if (resLength > 1 && posL < resLength - 1) {
+    if (resLength > 1 && posL < filterFileNames.length) {
       textExtra = " of students in " + filterFileNames[posL];
-    } else if (resLength - 1 == posL && resLength > 1) {
+    } else if (resLength > 1 && posL >= filterFileNames.length) {
       textExtra = " of students not in " + (filterFileNames.length > 1 ? "any group" : filterFileNames[0]);
     }
     let pos = 0;
@@ -131,12 +131,7 @@ const buildGraphics = async (data, location = '#studentKDE') => {
     silverFinal = Math.max(silverFinal, 1.06 * getStandardDeviation(data[i].data) * Math.pow(data[i].data.length, -0.2));
   }
   if (silverFinal == 0) {
-    $('#alertBox').show();
-    $('#alertBox').text("No data to plot.");
-    $('#alertBox')[0].scrollIntoView();
-    $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-      $("#alertBox").slideUp(1000);
-    });
+    showAlertBox("No data to plot.");
     return;
   }
 

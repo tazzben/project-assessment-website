@@ -34,15 +34,15 @@ Dropzone.options.myFilter = {
                     const convertFunc = typeof savedStudent[0]['Variable'] == 'number' ? Number : String;
                     myStudentList = myStudentList.map(convertFunc);
                 }
-                savedFilterFileNames.push(event.target.fileName);
-                savedFilterData.push(myStudentList);
+                let elements = savedStudent.filter(x => myStudentList.includes(x['Variable']));
+                if (elements.length > 1) {
+                    savedFilterFileNames.push(event.target.fileName);
+                    savedFilterData.push(myStudentList);
+                } else {
+                    showAlertBox("The CSV file you uploaded does not contain at least two student identifiers included in the estimated model.");
+                }
             } else {
-                $('#alertBox').show();
-                $('#alertBox').text("The CSV file you uploaded does not contain a list of student identifiers.");
-                $('#alertBox')[0].scrollIntoView();
-                $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-                    $("#alertBox").slideUp(1000);
-                });
+                showAlertBox("The CSV file you uploaded does not contain a list of student identifiers.");
             }
             dz.processedFiles += 1;
             if (dz.processedFiles == dz.numFlies) {

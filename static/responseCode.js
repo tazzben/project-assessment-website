@@ -32,6 +32,15 @@ function updateBootstrap(i, n) {
     return false;
 }
 
+const showAlertBox = (text) => {
+    $('#alertBox').text(text);
+    $('#alertBox').show();
+    $('#alertBox')[0].scrollIntoView();
+    $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
+        $("#alertBox").slideUp(1000);
+    });
+}
+
 const cancelBootstrap = () => {
     stopBootstrap = true;
     $("#cancelBootstrap").prop("disabled", true);
@@ -39,12 +48,7 @@ const cancelBootstrap = () => {
 
 const startBootstrap = async () => {
     if (savedRubric.length == 0) {
-        $('#alertBox').text("Cannot bootstrap without the model being fit. Please try again.");
-        $('#alertBox').show();
-        $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-            $("#alertBox").slideUp(1000);
-        });
+        showAlertBox("Cannot bootstrap without the model being fit. Please try again.");
         return;
     }
     $("#startBootstrap").prop("disabled", true);
@@ -65,12 +69,7 @@ const startBootstrap = async () => {
     $('body').css('paddingBottom', '0px');
     $('#newFileDiv').show();
     if (!response) {
-        $('#alertBox').text("Bootstrap failed. Please try again.");
-        $('#alertBox').show();
-        $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-            $("#alertBox").slideUp(1000);
-        });
+        showAlertBox("Bootstrap failed. Please try again.");
         $("#startBootstrap").prop("disabled", false);
         $("#cancelBootstrap").prop("disabled", true);
     }
@@ -80,12 +79,7 @@ function paintAfterBootstrap(rubricRW, errors) {
     let rubricR = JSON.parse(rubricRW);
     paintRubricTable(rubricR, true);
     if (errors && errors > 0) {
-        $('#alertBox').text(errors + " errors were encountered during bootstrap.");
-        $('#alertBox').show();
-        $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-            $("#alertBox").slideUp(1000);
-        });
+        showAlertBox(errors + " errors were encountered during bootstrap.");
     }
 }
 
@@ -95,12 +89,7 @@ function populateColForm(num, text){
     let colList = numList.concat(textList);
 
     if (colList.length < 4 || numList.length < 2) {
-        $('#alertBox').text("The data provided does not have enough columns to estimate a model. Please try again.");
-        $('#alertBox').show();
-        $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-            $("#alertBox").slideUp(1000);
-        });
+        showAlertBox("The data provided does not have enough columns to estimate a model. Please try again.");
         return;
     }
 
@@ -217,12 +206,7 @@ const saveMapping = async () => {
     $('#myDropZoneWrapper').show();
     await releaseWakeLock();
     if (!response) {
-        $('#alertBox').text("We were unable to estimate the model. Please try again.");
-        $('#alertBox').show();
-        $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-            $("#alertBox").slideUp(1000);
-        });
+        showAlertBox("We were unable to estimate the model. Please try again.");
     }
 };
 
@@ -266,12 +250,7 @@ const buildCSVQuote = (text) => {
 
 const buildCSVStudentData = () => {
     if (savedStudent.length == 0) {
-        $('#alertBox').text("Cannot export data. Please estimate the model first.");
-        $('#alertBox').show();
-        $('#alertBox')[0].scrollIntoView();
-        $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-            $("#alertBox").slideUp(1000);
-        });
+        showAlertBox("Cannot export data. Please estimate the model first.");
         return;
     }
     let headerData = ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic'];
