@@ -32,13 +32,10 @@ function updateBootstrap(i, n) {
     return false;
 }
 
+
 const showAlertBox = (text) => {
-    $('#alertBox').text(text);
-    $('#alertBox').show();
-    $('#alertBox')[0].scrollIntoView();
-    $("#alertBox").fadeTo(2000, 1000).slideUp(1000, () => {
-        $("#alertBox").slideUp(1000);
-    });
+    $('#alertError').text(text); 
+    $('#alertBox').modal('show');
 }
 
 const cancelBootstrap = () => {

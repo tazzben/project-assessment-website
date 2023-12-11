@@ -145,6 +145,9 @@ $(document).ready(() => {
     $('#printSheet').click(() => {
         window.print();
     });
+    $('#closeAlert').click(() => {
+        $('#alertBox').modal('hide');
+    });
 
     $(window).on("resize", () => {
         clearTimeout(resizeWindowTimer);
