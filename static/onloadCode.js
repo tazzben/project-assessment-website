@@ -39,10 +39,10 @@ Dropzone.options.myFilter = {
                     savedFilterFileNames.push(event.target.fileName);
                     savedFilterData.push(myStudentList);
                 } else {
-                    showAlertBox("The CSV file you uploaded does not contain at least two student identifiers included in the estimated model.");
+                    showAlertBox("The CSV file you selected does not contain at least two student identifiers included in the estimated model.");
                 }
             } else {
-                showAlertBox("The CSV file you uploaded does not contain a list of student identifiers.");
+                showAlertBox("The CSV file you selected does not contain a list of student identifiers.");
             }
             dz.processedFiles += 1;
             if (dz.processedFiles == dz.numFlies) {
