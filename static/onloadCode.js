@@ -54,7 +54,7 @@ Dropzone.options.myFilter = {
                 showAlertBox("The CSV file you selected does not contain a list of student identifiers.");
             }
             dz.processedFiles += 1;
-            if (dz.processedFiles == dz.numFlies) {
+            if (dz.processedFiles >= dz.numFlies) {
                 dz.numFlies = 0;
                 dz.processedFiles = 0;
                 await rebuildGraphs(savedFilterData, savedFilterFileNames);
@@ -72,7 +72,13 @@ Dropzone.options.myFilter = {
             dz.numFlies += 1;
         });
         this.on("error", function(file){
-            if (!file.accepted) this.removeFile(file);
+            if (!file.accepted){
+                this.removeFile(file);
+                dz.numFlies -= 1;
+            }
+            console.log(file);
+            console.log(dz.processedFiles);
+            console.log(dz.numFlies); 
         });
     }
 };
