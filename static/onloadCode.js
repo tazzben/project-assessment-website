@@ -69,6 +69,7 @@ Dropzone.options.myFilter = {
         dz.numFlies = 0;
         dz.processedFiles = 0;
         this.on("addedfile", function(_) {
+            console.log(_);
             dz.numFlies += 1;
         });
         this.on("error", function(file){
