@@ -2,6 +2,8 @@ Dropzone.options.myDropzone = {
     dictDefaultMessage: "Drag a CSV here.  The CSV should contain columns of rubric scores, student and rubric row identifiers, and the max possible score on a rubric row.",
     maxFilesize: 10,
     maxFiles: 1,
+    createImageThumbnails: false,
+    disablePreviews: true,
     acceptedFiles: ".csv",
     accept: async (file, _) => {
         let reader = new FileReader();
@@ -15,6 +17,11 @@ Dropzone.options.myDropzone = {
         });
         reader.fileName = file.name.replace(/\.[^/.\s\\]+$/, "");
         reader.readAsText(file);        
+    },
+    init: function() {
+        this.on("error", function(file){
+            if (!file.accepted) this.removeFile(file);
+        });
     }
 };
 
@@ -23,6 +30,8 @@ Dropzone.options.myFilter = {
     maxFilesize: 10,
     maxFiles: 5,
     acceptedFiles: ".csv",
+    createImageThumbnails: false,
+    disablePreviews: true,
     accept: (file, _) => {
         let reader = new FileReader();
         reader.addEventListener("loadend", async (event) => {
@@ -61,6 +70,9 @@ Dropzone.options.myFilter = {
         dz.processedFiles = 0;
         this.on("addedfile", function(_) {
             dz.numFlies += 1;
+        });
+        this.on("error", function(file){
+            if (!file.accepted) this.removeFile(file);
         });
     }
 };
