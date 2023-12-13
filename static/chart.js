@@ -124,7 +124,10 @@ const getListsFromBD = (data) => {
 
 const updateInfoTooltip = (el, bandwidth) => {
   let text = "Graph based on a bandwidth of " + bandwidth.toFixed(3) + ". Bandwidth calculated using Silverman's method.";
-  $(el).attr("data-bs-title", text);
+  $(el).attr('title', text);
+  $(el).attr('data-original-title', text);
+  $(el).tooltip('update');
+  $(el).tooltip('show');
 };
 
 
