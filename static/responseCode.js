@@ -227,7 +227,7 @@ const rebuildGraphs = async (filterdata = [], filterFileNames = [], justCharts =
     }
     
     let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterLists = filterdata, filterFileNames = filterFileNames);
-    buildGraphics(graphdataAML, '#studentKDEAML', '#mlInfo');
+    buildGraphics(graphdataAML, '#studentKDEAML', '#amlInfo');
     
     if (!justCharts) {
         buildSumTable(getListsFromBD(graphdataAML), target = '#StatDataAML', filterFileNames = filterFileNames);
