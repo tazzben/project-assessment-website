@@ -122,7 +122,13 @@ const getListsFromBD = (data) => {
 };
 
 
-const buildGraphics = async (data, location = '#studentKDE') => {
+const updateInfoTooltip = (el, bandwidth) => {
+  let text = "Graph based on a bandwidth of " + bandwidth.toFixed(3) + ". Bandwidth calculated using Silverman's method.";
+  $(el).attr("data-bs-title", text);
+};
+
+
+const buildGraphics = async (data, location = '#studentKDE', infoEl = '#amlInfo') => {
   let silverFinal = 0;
   for (let i = 0; i < data.length; i++) {
     if (data[i].data.length < 2) {
@@ -134,7 +140,7 @@ const buildGraphics = async (data, location = '#studentKDE') => {
     showAlertBox("No data to plot.");
     return;
   }
-
+  updateInfoTooltip(infoEl, silverFinal);
   const contentWidth = Math.min(Math.max($('#rubricTableRow').width(), $('#fitTableRow').width(), $(location).width(), chartWidths.widthMin), chartWidths.widthMax);
   $(location).empty();
 

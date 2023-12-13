@@ -227,14 +227,14 @@ const rebuildGraphs = async (filterdata = [], filterFileNames = [], justCharts =
     }
     
     let graphdataAML = buildData(variable = 'Average Marginal Logistic', filterLists = filterdata, filterFileNames = filterFileNames);
-    buildGraphics(graphdataAML, '#studentKDEAML');
+    buildGraphics(graphdataAML, '#studentKDEAML', '#mlInfo');
     
     if (!justCharts) {
         buildSumTable(getListsFromBD(graphdataAML), target = '#StatDataAML', filterFileNames = filterFileNames);
     }
     
     let graphdataDAML = buildData(variable = 'Average Discrete Marginal Logistic', filterLists = filterdata, filterFileNames = filterFileNames);
-    buildGraphics(graphdataDAML, '#studentKDEDAML');
+    buildGraphics(graphdataDAML, '#studentKDEDAML', '#dmlInfo');
     
     if (!justCharts) {
         buildSumTable(getListsFromBD(graphdataDAML), target = '#StatDataDAML', filterFileNames = filterFileNames);
