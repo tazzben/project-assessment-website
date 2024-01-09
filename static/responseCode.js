@@ -251,6 +251,11 @@ const buildCSVStudentData = () => {
         return;
     }
     let headerData = ['Variable', 'Value', 'Average Logistic', 'Average Marginal Logistic', 'Average Discrete Marginal Logistic'];
+    
+    if (savedFilterData && savedFilterData.length > 0) {
+        headerData.push('Groups');
+    }
+
     let stream = "";
 
     for (let head of headerData) {
@@ -259,6 +264,17 @@ const buildCSVStudentData = () => {
     stream += "\n";
     for (let row of savedStudent) {
         for (let head of headerData) {
+            if (head == 'Groups') {
+                let groups = "";
+                for (let i = 0; i < savedFilterData.length; i++) {
+                    if (savedFilterData[i].includes(row['Variable'])) {
+                        groups += savedFilterFileNames[i] + ", ";
+                    }
+                }
+                groups = groups.substring(0, groups.length - 2);
+                stream += buildCSVQuote(groups) + ",";
+                continue;
+            }
             let content = row[head];
             if (Array.isArray(content) && content.length == 2) {
                 content = "(" + Number.parseFloat(content[0]).toFixed(3) + ", " + Number.parseFloat(content[1]).toFixed(3) + ")";
