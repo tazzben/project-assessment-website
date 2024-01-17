@@ -72,7 +72,7 @@ const buildData = (variable = 'Average Logistic', filterLists = [], filterFileNa
 
 const buildSumTable = async (l = [], target = '#StatData', filterFileNames = []) => {
   $(target).empty();
-  const [response, p] = await calcMeansSDMW(...l.map(x => JSON.stringify(x)));
+  const [response, p, anderson, ks] = await calcMeansSDMW(...l.map(x => JSON.stringify(x)));
   const res = JSON.parse(response);
   let posL = 0; 
   const resLength = res.length;
@@ -100,14 +100,27 @@ const buildSumTable = async (l = [], target = '#StatData', filterFileNames = [])
   }
 
   if (resLength > 1) {
-    let m = document.createElement("tr");
-    let td = document.createElement("td");
-    td.textContent = resLength > 2 ?  "Kruskal-Wallis p-value" : "Mann-Whitney p-value";
-    m.appendChild(td);
-    td = document.createElement("td");
-    td.textContent = Number.parseFloat(p).toFixed(3);
-    m.appendChild(td);
-    $(target).append(m);
+
+    const testNames = [
+      resLength > 2 ? "Kruskal-Wallis p-value" : "Mann-Whitney p-value",
+      "Anderson-Darling p-value",
+      "Kolmogorov-Smirnov p-value"
+    ];
+    
+    const tests = [p, anderson, ks].map((value, index) => [value, testNames[index]]);
+
+    for (const item of tests) {
+      if (item[0] !== null) {
+        let m = document.createElement("tr");
+        let td = document.createElement("td");
+        td.textContent = item[1];
+        m.appendChild(td);
+        td = document.createElement("td");
+        td.textContent = Number.parseFloat(item[0]).toFixed(3);
+        m.appendChild(td);
+        $(target).append(m);
+      }
+    }
   }
 };
 

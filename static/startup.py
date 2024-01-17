@@ -5,7 +5,7 @@ from pyscript import window as js
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
-from scipy.stats import mannwhitneyu, kruskal
+from scipy.stats import mannwhitneyu, kruskal, anderson_ksamp, ks_2samp
 import ProjectAssessmentForPyScript as pa
 
 workingData = pd.DataFrame()
@@ -98,7 +98,9 @@ async def calcMeansSDMW(*args):
         r.append(s)
         results.append([float(s.mean()), float(s.std()), int(s.count())])
     _, p = mannwhitneyu(*r) if len(results) == 2 else kruskal(*r) if len(results) > 2 else (None, None)
-    return json.dumps(results), p
+    anderson_result = anderson_ksamp(r).pvalue if len(results) > 1 else None
+    ks_result = ks_2samp(*r).pvalue if len(results) == 2 else None
+    return json.dumps(results), p, anderson_result, ks_result
 
 async def checkCommSystem():
     js.clearErrorMessage()
