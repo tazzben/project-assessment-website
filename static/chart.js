@@ -108,15 +108,18 @@ const buildSumTable = async (l = [], target = '#StatData', filterFileNames = [])
     ];
     
     const tests = [p, anderson, ks].map((value, index) => [value, testNames[index]]);
-
     for (const item of tests) {
-      if (item[0] !== null) {
+      if (item[0] !== null && item[0] !== undefined) {
         let m = document.createElement("tr");
         let td = document.createElement("td");
         td.textContent = item[1];
         m.appendChild(td);
         td = document.createElement("td");
-        td.textContent = Number.parseFloat(item[0]).toFixed(3);
+        if (!isNaN(item[0])) {
+          td.textContent = Number.parseFloat(item[0]).toFixed(3);
+        } else {
+          td.textContent = item[0];
+        }
         m.appendChild(td);
         $(target).append(m);
       }
