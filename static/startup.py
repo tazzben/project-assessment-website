@@ -87,7 +87,7 @@ async def getListData(data):
     if len(data) == 0:
         return json.dumps([])
     csvStringIO = StringIO(data)
-    df = pd.read_csv(csvStringIO, sep=",")
+    df = pd.read_csv(csvStringIO, sep=",", header=None)
     return pd.Series(df.to_numpy().flatten().tolist()).to_json(orient='records')
 
 async def calcMeansSDMW(*args):
