@@ -115,10 +115,16 @@ const buildSumTable = async (l = [], target = '#StatData', filterFileNames = [])
         td.textContent = item[1];
         m.appendChild(td);
         td = document.createElement("td");
-        if (!isNaN(item[0])) {
-          td.textContent = Number.parseFloat(item[0]).toFixed(3);
+        if (item[1] === "Anderson-Darling p-value") {
+          if (item[0] <= 0.001) {
+              td.textContent = "≤ 0.001";
+          } else if (item[0] >= 0.250) {
+              td.textContent = "≥ 0.250";
+          } else {
+              td.textContent = Number.parseFloat(item[0]).toFixed(3);
+          }
         } else {
-          td.textContent = item[0];
+          td.textContent = Number.parseFloat(item[0]).toFixed(3);
         }
         m.appendChild(td);
         $(target).append(m);
