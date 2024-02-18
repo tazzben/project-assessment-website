@@ -170,12 +170,17 @@ $(document).ready(() => {
     });
 
     $(window).on("beforeprint", () => {
+        savedDocumentTitle = document.title;
+        if (fileNameOfResults.length > 0) {
+            document.title = "Project Based Assessment - " + fileNameOfResults;
+        }
         chartWidths.widthMin = chartWidths.printWidthMin;
         chartWidths.widthMax = chartWidths.printWidthMax;
         rebuildGraphsAfterResize();
     });
 
     $(window).on("afterprint", () => {
+        document.title = savedDocumentTitle;
         chartWidths.widthMin = chartWidths.defaultWidthMin;
         chartWidths.widthMax = chartWidths.defaultWidthMax;
         rebuildGraphsAfterResize();

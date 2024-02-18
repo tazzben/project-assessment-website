@@ -5,6 +5,7 @@ let savedFilterFileNames = [];
 let stopBootstrap = false;
 let showError = false;
 let fileNameOfResults = "";
+let savedDocumentTitle = "";
 
 function showErrorMessage(){
     showError = true;
