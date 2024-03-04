@@ -186,8 +186,8 @@ $(document).ready(() => {
         rebuildGraphsAfterResize();
     });
     
-    if (navigator.userAgent.toLowerCase().includes('firefox')){
-        $('#firefoxDiv').show();
+    if (!("wakeLock" in navigator)) {
+        $('#nosupportDiv').show();
     }
 });
 
