@@ -127,6 +127,8 @@ async def bootstrap(dataset, n, rubric=False, linear=False, columns=None, func=N
         result = await CallRow(row)
         if result is not None:
             keyresult, varresult = result
+            keyresult.dropna(axis=1, how='all', inplace=True)
+            varresult.dropna(axis=1, how='all', inplace=True)
             l.append(keyresult)
             l.append(varresult)
             if func is not None and (i+1) % 10 == 0:
@@ -236,7 +238,14 @@ async def getResults(dataset: pd.DataFrame,c=0.025, rubric=False, n=1000, linear
             McFadden = estimates["McFadden"]
             LR = estimates["LR"]
             ChiSquared = estimates["Chi-Squared"]
-        combined = pd.concat([estimates['rubric'], estimates['variables']], ignore_index=True)
+        if not estimates['rubric'].empty and not estimates['variables'].empty:
+            combined = pd.concat([estimates['rubric'], estimates['variables']], ignore_index=True)
+        elif not estimates['rubric'].empty:
+            combined = estimates['rubric']
+        elif not estimates['variables'].empty:
+            combined = estimates['variables']
+        else:
+            combined = None
         return (combined, estimates['student'], pd.DataFrame(l), nones, estimates['n'], estimates['NumberOfParameters'], estimates['AIC'], estimates['BIC'], McFadden, LR, ChiSquared, estimates['LogLikelihood'])
     else:
         raise Exception('Could not find estimates.')
