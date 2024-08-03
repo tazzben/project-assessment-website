@@ -1,7 +1,8 @@
 import asyncio
 import json
 from io import StringIO
-from pyscript import window as js
+from pyscript import window, RUNNING_IN_WORKER
+from pyscript.ffi import create_proxy
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
@@ -25,10 +26,10 @@ async def passFileData(data):
             elif is_numeric_dtype(df[col]):
                 numericColumns.append(col)
         workingData = df
-    js.populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
+    window.populateColForm(json.dumps(numericColumns), json.dumps(textColumns))
 
 async def updateJS(i, n):
-    r = js.updateBootstrap(i, n)
+    r = window.updateBootstrap(i, n)
     if r is True:
         return True
     return None
@@ -53,9 +54,9 @@ async def buildTable(colList):
             rubricR, studentR, _, _, obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood  = await pa.getResults(df, func=updateJS, n=0)
         except:
             return None
-        js.showErrorMessage()
-        js.paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
-        js.clearErrorMessage()
+        window.showErrorMessage()
+        window.paintAfterEst(rubricR.to_json(orient='records'), studentR.to_json(orient='records'), obs, param, AIC, BIC, McFadden, LR, ChiSquared, LogLikelihood)
+        window.clearErrorMessage()
         return True
     return None
 
@@ -74,9 +75,9 @@ async def startBootstrap():
         except:
             return None
         printedRubric = rubricR.merge(bootstrap, on='Variable', how='left').to_json(orient='records')
-        js.showErrorMessage()
-        js.paintAfterBootstrap(printedRubric, errors)
-        js.clearErrorMessage()
+        window.showErrorMessage()
+        window.paintAfterBootstrap(printedRubric, errors)
+        window.clearErrorMessage()
         return True
     return None
 
@@ -106,12 +107,22 @@ async def calcMeansSDMW(*args):
     return json.dumps(results), p, anderson_result, ks_result
 
 async def checkCommSystem():
-    js.clearErrorMessage()
+    window.clearErrorMessage()
     return True
 
-js.startBootstrapWrapper = startBootstrapWrapper
-js.buildTableWrapper = buildTableWrapper
-js.calcMeansSDMW = calcMeansSDMW
-js.passFileData = passFileData
-js.getListData = getListData
-js.checkCommSystem = checkCommSystem
+def attach_async(fn):
+    if not RUNNING_IN_WORKER:
+        return fn
+    cb = create_proxy(fn)
+    def invoker(*args, **kw):
+        p = window.Promise.withResolvers()
+        cb(*args, **kw).add_done_callback(lambda _:p.resolve(_.result()))
+        return p.promise
+    return invoker
+
+window.startBootstrapWrapper = attach_async(startBootstrapWrapper)
+window.buildTableWrapper = attach_async(buildTableWrapper)
+window.calcMeansSDMW = attach_async(calcMeansSDMW)
+window.passFileData = attach_async(passFileData)
+window.getListData = attach_async(getListData)
+window.checkCommSystem = attach_async(checkCommSystem)
