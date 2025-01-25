@@ -2,6 +2,10 @@
 from flask import Flask, redirect, render_template
 app = Flask(__name__)
 
+@app.route('/convert')
+def calendar():
+    return redirect("https://projectassessment.app/convert/")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
