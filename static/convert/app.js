@@ -89,13 +89,13 @@ const clearErrorMessage = () => {
 
 const getSortedData = (data, question) => {
     const filteredData = extractColumnsByKeyStart(data, question);
-    const uniqueFilteredData = filteredData.filter((row, index, self) => 
-        index === self.findIndex((t) => (
-            Object.values(t)[0] === Object.values(row)[0]
-        ))
+    let sortedData = sortBySecondItem(
+        filteredData.filter((row, index, self) => 
+            index === self.findIndex((t) => (
+                Object.values(t)[0] === Object.values(row)[0]
+            )) && !(new Set([null, undefined, '']).has(Object.values(row)[0])) 
+        )
     );
-
-    let sortedData = sortBySecondItem(uniqueFilteredData);
     let k = 0;
     for (let i = 0; i < sortedData.length; i++) {
         if(Object.keys(sortedData[i]).length > 0){
