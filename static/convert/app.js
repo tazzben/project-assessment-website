@@ -8,7 +8,7 @@ let dataset = {
 };
 
 const extractTextBeforeLastDash = (str) => {
-    const lastDashIndex = str.lastIndexOf('-');
+    const lastDashIndex = str.lastIndexOf(' - ');
     if (lastDashIndex === -1) {
         return str;
     }
