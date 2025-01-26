@@ -1,5 +1,4 @@
 const fileInput = document.getElementById('csvFileInput');
-const output = document.getElementById('output');
 let dataset = {
     data: [],
     allKeys: new Set(),
