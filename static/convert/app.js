@@ -161,6 +161,8 @@ const showKMapping = () => {
         const boundNode = document.createElement('div');
         const labelNode = document.createElement('label');
         const inputNode = document.createElement('input');
+        inputNode.id = `boundValue-${question}`;
+        labelNode.htmlFor = inputNode.id;
         boundNode.classList.add('container-fluid');
         boundNode.classList.add('mb-3');
         boundNode.classList.add('pb-3');
