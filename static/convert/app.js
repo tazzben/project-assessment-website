@@ -3,7 +3,8 @@ let dataset = {
     data: [],
     allKeys: new Set(),
     kMapping: [],
-    boundMapping: []
+    boundMapping: [], 
+    fileName: ''
 };
 
 const extractTextBeforeLastDash = (str) => {
@@ -71,7 +72,7 @@ const handleFileSelect = (event) => {
             dynamicTyping: true,
             complete: (results) => {
                 clearErrorMessage();
-                processData(results.data);
+                processData(results.data, file);
                 showKMapping();
             },
             error: (error) => {
@@ -120,13 +121,9 @@ const showKMapping = () => {
     for (const question of questionList) {
         const sortedData = getSortedData(dataset.data, question);
         const container = document.createElement('div');
-        container.classList.add('d-flex');
-        container.classList.add('flex-row');
-        container.classList.add('flex-wrap');
-        container.classList.add('gap-3');
+        container.classList.add('d-flex', 'flex-row', 'flex-wrap', 'gap-3');
         const questionNode = document.createElement('div');
-        questionNode.classList.add('container-fluid');
-        questionNode.classList.add('mt-3');
+        questionNode.classList.add('container-fluid', 'mt-3');
         questionNode.textContent = 'Rubric row corresponding to "' + question + '"';
         form.appendChild(questionNode);
         let bound = 0;
@@ -135,9 +132,7 @@ const showKMapping = () => {
                 const k = sortedData[i]['k'];
                 const criteria = Object.values(sortedData[i])[0];
                 const kNode = document.createElement('div');
-                kNode.classList.add('col-2');
-                kNode.classList.add('border');
-                kNode.classList.add('p-3');              
+                kNode.classList.add('col-2', 'border', 'p-3');
                 const labelNode = document.createElement('label');
                 const inputNode = document.createElement('input');
                 labelNode.textContent = criteria;
@@ -163,11 +158,7 @@ const showKMapping = () => {
         const inputNode = document.createElement('input');
         inputNode.id = `boundValue-${question}`;
         labelNode.htmlFor = inputNode.id;
-        boundNode.classList.add('container-fluid');
-        boundNode.classList.add('mb-3');
-        boundNode.classList.add('pb-3');
-        boundNode.classList.add('pt-3');
-        boundNode.classList.add('border-bottom');
+        boundNode.classList.add('container-fluid', 'mb-3', 'pb-3', 'pt-3', 'border-bottom');
         labelNode.classList.add('form-label');
         inputNode.classList.add('form-control');
         labelNode.textContent = 'Bound value for "' + question + '." This is the maximum k value for this rubric row.';
@@ -182,9 +173,17 @@ const showKMapping = () => {
     }
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
-    submitButton.textContent = 'Map Criteria to k Values';
+    submitButton.textContent = 'Map Criteria to k and Bound Values';
     submitButton.classList.add('btn', 'btn-primary');
     form.appendChild(submitButton);
+    const backButton = document.createElement('button');
+    backButton.type = 'button';
+    backButton.textContent = 'Back';
+    backButton.classList.add('btn', 'btn-secondary', 'ms-2');
+    backButton.addEventListener('click', () => {
+        swapInterface(true);
+    });
+    form.appendChild(backButton);
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         let kMapping = [];
@@ -242,7 +241,7 @@ const processResults = () => {
     const csvUrl = URL.createObjectURL(csvBlob);
     let downloadLink = document.createElement('a');
     downloadLink.href = csvUrl;
-    downloadLink.download = 'project_assessment.csv';
+    downloadLink.download = dataset.fileName + '-converted.csv';
     downloadLink.click();
     swapInterface(true);
 };
@@ -263,12 +262,17 @@ const findBoundValue = (question) => {
     return null;
 };
 
-const processData = (data) => {
+const processData = (data, file) => {
     const allKeys = data.reduce((keys, row) => {
         return new Set([...keys, ...Object.keys(row)]);
     }, new Set());
     dataset.allKeys = allKeys;
     dataset.data = data;
+    let fileName = file.name;
+    if (fileName && fileName.toLowerCase().endsWith('.csv')) {
+        fileName = fileName.substring(0, fileName.toLowerCase().lastIndexOf('.csv'));
+        dataset.fileName = fileName;
+    }
 };
 
 const swapInterface = (back = false) => {
@@ -281,7 +285,8 @@ const swapInterface = (back = false) => {
             data: [],
             allKeys: new Set(),
             kMapping: [],
-            boundMapping: []
+            boundMapping: [],
+            fileName: ''
         };
         fileInput.value = '';
     }

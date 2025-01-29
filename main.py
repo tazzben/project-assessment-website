@@ -2,8 +2,9 @@
 from flask import Flask, redirect, render_template
 app = Flask(__name__)
 
+@app.route('/converter')
 @app.route('/convert')
-def calendar():
+def convert():
     return redirect("https://projectassessment.app/convert/")
 
 @app.errorhandler(404)
