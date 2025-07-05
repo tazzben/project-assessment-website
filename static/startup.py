@@ -2,7 +2,6 @@ import asyncio
 import json
 from io import StringIO
 from pyscript import window as js
-from pyscript.ffi import create_proxy
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
@@ -110,18 +109,9 @@ async def checkCommSystem():
     js.clearErrorMessage()
     return True
 
-
-create_proxy(startBootstrapWrapper)
-create_proxy(buildTableWrapper)
-create_proxy(calcMeansSDMW)
-create_proxy(passFileData)
-create_proxy(getListData)
-create_proxy(checkCommSystem)
-
 js.startBootstrapWrapper = startBootstrapWrapper
 js.buildTableWrapper = buildTableWrapper
 js.calcMeansSDMW = calcMeansSDMW
 js.passFileData = passFileData
 js.getListData = getListData
 js.checkCommSystem = checkCommSystem
-
