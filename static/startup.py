@@ -111,10 +111,17 @@ async def checkCommSystem():
     return True
 
 
-js.startBootstrapWrapper = create_proxy(startBootstrapWrapper)
-js.buildTableWrapper = create_proxy(buildTableWrapper)
-js.calcMeansSDMW = create_proxy(calcMeansSDMW)
-js.passFileData = create_proxy(passFileData)
-js.getListData = create_proxy(getListData)
-js.checkCommSystem = create_proxy(checkCommSystem)
+create_proxy(startBootstrapWrapper)
+create_proxy(buildTableWrapper)
+create_proxy(calcMeansSDMW)
+create_proxy(passFileData)
+create_proxy(getListData)
+create_proxy(checkCommSystem)
+
+js.startBootstrapWrapper = startBootstrapWrapper
+js.buildTableWrapper = buildTableWrapper
+js.calcMeansSDMW = calcMeansSDMW
+js.passFileData = passFileData
+js.getListData = getListData
+js.checkCommSystem = checkCommSystem
 
