@@ -2,6 +2,7 @@ import asyncio
 import json
 from io import StringIO
 from pyscript import window as js
+from pyscript.ffi import create_proxy
 import pandas as pd
 from pandas.api.types import is_string_dtype
 from pandas.api.types import is_numeric_dtype
@@ -11,6 +12,17 @@ import warnings
 
 workingData = pd.DataFrame()
 cleanData = pd.DataFrame()
+
+def attach_async(fn):
+    cb = create_proxy(fn)
+    
+    def invoker(*args, **kw):
+        p = js.Promise.withResolvers()
+        cb(*args, **kw).add_done_callback(lambda _:p.resolve(_.result()))
+        return p.promise
+
+    return invoker
+
 
 async def passFileData(data):
     global workingData
@@ -109,9 +121,9 @@ async def checkCommSystem():
     js.clearErrorMessage()
     return True
 
-js.startBootstrapWrapper = startBootstrapWrapper
-js.buildTableWrapper = buildTableWrapper
-js.calcMeansSDMW = calcMeansSDMW
-js.passFileData = passFileData
-js.getListData = getListData
-js.checkCommSystem = checkCommSystem
+js.startBootstrapWrapper = attach_async(startBootstrapWrapper)
+js.buildTableWrapper = attach_async(buildTableWrapper)
+js.calcMeansSDMW = attach_async(calcMeansSDMW)
+js.passFileData = attach_async(passFileData)
+js.getListData = attach_async(getListData)
+js.checkCommSystem = attach_async(checkCommSystem)

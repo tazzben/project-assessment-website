@@ -8,5 +8,6 @@
         "/ProjectAssessmentForPyScript/__init__.py": "./ProjectAssessmentForPyScript/__init__.py",
         "/ProjectAssessmentForPyScript/Solver.py": "./ProjectAssessmentForPyScript/Solver.py",
         "/ProjectAssessmentForPyScript/Marginal.py": "./ProjectAssessmentForPyScript/Marginal.py"
-    }
+    },
+    "experimental_create_proxy": "auto"
 }
