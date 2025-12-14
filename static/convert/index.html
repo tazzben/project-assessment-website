@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body >
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid pl-3 pr-3">
             <a class="navbar-brand" href="#">Canvas Rubric to Project Based Assessment</a>
@@ -28,23 +28,24 @@
             </div>
         </div>
     </nav>
+    <main>
+        <div id="notifications" class="container mt-3"></div>
 
-    <div id="notifications" class="container mt-3"></div>
 
+        <div class="container-fluid mt-3">
+            
+            <div class="container" id="fileInputDiv">
+                <form>
+                    <label for="csvFileInput" class="form-label">Select a <a href="https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-download-rubric-assessments-using-Enhanced-Rubrics/ta-p/631359" rel="noopener noreferrer" target="_blank">Canvas Enhanced Rubrics</a> file to be processed</label>
+                    <input type="file" class="form-control" id="csvFileInput" accept=".csv" />
+                </form>
+            </div>
 
-    <div class="container-fluid mt-3">
-        
-        <div class="container" id="fileInputDiv">
-            <form>
-                <label for="csvFileInput" class="form-label">Select a <a href="https://community.canvaslms.com/t5/Instructor-Guide/How-do-I-download-rubric-assessments-using-Enhanced-Rubrics/ta-p/631359" rel="noopener noreferrer" target="_blank">Canvas Enhanced Rubrics</a> file to be processed</label>
-                <input type="file" class="form-control" id="csvFileInput" accept=".csv" />
-            </form>
+            <div class="container" id="matchingDialog">
+            </div>
+            
         </div>
-
-        <div class="container" id="matchingDialog">
-        </div>
-        
-    </div>
+    </main>
     
     <template id="kMatchingTemplate">
         <h5>Set the corresponding k values for the criteria in each rubric row</h5>
