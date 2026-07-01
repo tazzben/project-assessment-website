@@ -94,7 +94,7 @@ async def solve(dataset, summary = True, linear = False, columns = None):
 
 async def bootstrapRow (dataset, columns, rubric=False, linear=False):
     key = 'rubric' if rubric else 'student'
-    ids = dataset[key].unique().flatten().tolist()
+    ids = dataset[key].unique().tolist()
     randomGroupIds = np.random.choice(ids, size=len(ids), replace=True)
     l = []
     for c, i in enumerate(randomGroupIds):
