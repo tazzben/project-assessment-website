@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas Quiz Attempts to Project Based Assessment</title>
+    <title>Convert Canvas Quiz Attempts</title>
     <link rel="SHORTCUT ICON" href="/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
@@ -11,7 +11,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid pl-3 pr-3">
-            <a class="navbar-brand" href="#">Canvas Quiz Attempts to Project Based Assessment</a>
+            <a class="navbar-brand" href="#">Convert Canvas Quiz Attempts</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -22,7 +22,10 @@
                         <a class="nav-link" href="https://projectassessment.app/" target="_blank" rel="noopener noreferrer">Project Based Assessment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://docs.projectassessment.app/canvas-and-converter-app" target="_blank" rel="noopener noreferrer">Docs</a>
+                        <a class="nav-link" href="/convert/" target="_blank" rel="noopener noreferrer">Convert Canvas Rubrics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://docs.projectassessment.app/" target="_blank" rel="noopener noreferrer">Docs</a>
                     </li>
                 </ul>
             </div>
@@ -35,11 +38,19 @@
                 <form>
                     <label for="csvFileInput" class="form-label">Select a Canvas New Quizzes CSV export to convert</label>
                     <input type="file" class="form-control" id="csvFileInput" accept=".csv">
-                    <div class="form-text">The file is read and converted entirely in this browser.</div>
                 </form>
             </div>
+            <div class="container" id="matchingDialog"></div>
         </div>
     </main>
+
+    <template id="nameMatchingTemplate">
+        <h5>Set names for each rubric rows</h5>
+        <div class="p-3 bg-info bg-opacity-10 border-top border-bottom border-info mt-3 mb-3">
+            The following item IDs were detected in the uploaded file. Enter a rubric row name for each one, or leave the default value to keep the original ID.
+        </div>
+        <form id="nameMatchingForm"></form>
+    </template>
 
     <template id="errorDialogTemplate">
         <div class="alert alert-danger" role="alert">

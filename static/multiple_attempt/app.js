@@ -1,4 +1,79 @@
 const fileInput = document.getElementById('csvFileInput');
+let pendingConversion = null;
+
+const getUniqueItemIds = (itemResults) => Array.from(new Set(itemResults.map((itemResult) => itemResult.itemId)));
+
+const swapInterface = (back = false) => {
+    const fileInputDiv = document.getElementById('fileInputDiv');
+    const matchingDialog = document.getElementById('matchingDialog');
+    fileInputDiv.style.display = back ? 'block' : 'none';
+    matchingDialog.style.display = back ? 'none' : 'block';
+    if (back) {
+        matchingDialog.replaceChildren();
+        pendingConversion = null;
+        fileInput.value = '';
+    }
+};
+
+const showItemNameMapping = (itemResults, file) => {
+    pendingConversion = { itemResults, file };
+    swapInterface();
+    const template = document.getElementById('nameMatchingTemplate');
+    const clone = template.content.cloneNode(true);
+    const form = clone.querySelector('form');
+    for (const itemId of getUniqueItemIds(itemResults)) {
+        const itemNode = document.createElement('div');
+        itemNode.classList.add('container-fluid', 'mb-3');
+        const labelNode = document.createElement('label');
+        const inputNode = document.createElement('input');
+        inputNode.id = `itemName-${itemId}`;
+        labelNode.htmlFor = inputNode.id;
+        labelNode.classList.add('form-label');
+        labelNode.textContent = `Friendly name for "${itemId}"`;
+        inputNode.type = 'text';
+        inputNode.name = 'itemName';
+        inputNode.value = itemId;
+        inputNode.dataset.itemId = itemId;
+        inputNode.classList.add('form-control');
+        itemNode.appendChild(labelNode);
+        itemNode.appendChild(inputNode);
+        form.appendChild(itemNode);
+    }
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Convert with These Names';
+    submitButton.classList.add('btn', 'btn-primary');
+    form.appendChild(submitButton);
+    const backButton = document.createElement('button');
+    backButton.type = 'button';
+    backButton.textContent = 'Back';
+    backButton.classList.add('btn', 'btn-secondary', 'ms-2');
+    backButton.addEventListener('click', () => {
+        swapInterface(true);
+    });
+    form.appendChild(backButton);
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const itemNameMapping = new Map();
+        form.querySelectorAll('input[name="itemName"]').forEach((input) => {
+            const friendlyName = input.value.trim();
+            itemNameMapping.set(input.dataset.itemId, friendlyName || input.dataset.itemId);
+        });
+        try {
+            const outputRows = buildOutputRows(pendingConversion.itemResults, itemNameMapping);
+            if (outputRows.length === 0) {
+                throw new Error('No graded quiz item attempts were found in this CSV.');
+            }
+            downloadResults(outputRows, pendingConversion.file);
+            swapInterface(true);
+        } catch (error) {
+            console.error('Error converting Canvas New Quizzes CSV:', error);
+            showErrorMessage(error.message || 'The CSV file could not be converted.');
+            swapInterface(true);
+        }
+    });
+    document.getElementById('matchingDialog').replaceChildren(clone);
+};
 
 const showErrorMessage = (message) => {
     const template = document.getElementById('errorDialogTemplate');
@@ -88,7 +163,7 @@ const readQuizFile = (rows) => {
     return itemResults;
 };
 
-const buildOutputRows = (itemResults) => {
+const buildOutputRows = (itemResults, itemNameMapping = new Map()) => {
     const attemptsByStudentAndItem = new Map();
     for (const itemResult of itemResults) {
         const key = `${itemResult.studentId}\u0000${itemResult.itemId}`;
@@ -107,9 +182,10 @@ const buildOutputRows = (itemResults) => {
         const attemptsThroughFirstCorrect = firstCorrectAttemptIndex === -1
             ? sortedAttempts.length
             : firstCorrectAttemptIndex + 1;
+        const itemId = sortedAttempts[0].itemId;
         return {
             id: sortedAttempts[0].studentId,
-            rubric: sortedAttempts[0].itemId,
+            rubric: itemNameMapping.get(itemId) || itemId,
             k: firstCorrectAttemptIndex === -1 ? sortedAttempts.length : firstCorrectAttemptIndex,
             bound: attemptsThroughFirstCorrect
         };
@@ -140,12 +216,10 @@ const handleFileSelect = (event) => {
             try {
                 clearErrorMessage();
                 const itemResults = readQuizFile(results.data);
-                const outputRows = buildOutputRows(itemResults);
-                if (outputRows.length === 0) {
+                if (itemResults.length === 0) {
                     throw new Error('No graded quiz item attempts were found in this CSV.');
                 }
-                downloadResults(outputRows, file);
-                fileInput.value = '';
+                showItemNameMapping(itemResults, file);
             } catch (error) {
                 console.error('Error converting Canvas New Quizzes CSV:', error);
                 showErrorMessage(error.message || 'The CSV file could not be converted.');

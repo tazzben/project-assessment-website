@@ -7,6 +7,12 @@ app = Flask(__name__)
 def convert():
     return redirect("https://projectassessment.app/convert/")
 
+@app.route('/multiple_attempt')
+@app.route('/multiple_attempts')
+@app.route('/multiple')
+def multiple_attempts():
+    return redirect("https://projectassessment.app/multiple_attempt/")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
