@@ -18,6 +18,15 @@ const getFileNameWithoutExtension = (fileName) => {
 
 const getColumnIndex = (header, columnName) => header.findIndex((value) => value.trim() === columnName);
 
+const findColumnIndexInRange = (header, columnName, startIndex, endIndex) => {
+    for (let index = startIndex; index < endIndex; index += 1) {
+        if (header[index].trim() === columnName) {
+            return index;
+        }
+    }
+    return -1;
+};
+
 const isBlankRow = (row) => row.every((value) => String(value ?? '').trim() === '');
 
 const getNumericValue = (value) => {
@@ -26,7 +35,7 @@ const getNumericValue = (value) => {
 };
 
 // TODO: Update this function if Canvas changes the New Quizzes CSV export layout.
-// It intentionally reads positional columns because Canvas repeats item header names.
+// Item blocks are located by their repeated 'ItemID' header rather than fixed offsets, since Canvas repeats item header names.
 const readQuizFile = (rows) => {
     const [header, ...dataRows] = rows.filter((row) => !isBlankRow(row));
     if (!header) {
@@ -45,6 +54,14 @@ const readQuizFile = (rows) => {
         throw new Error('No Canvas New Quizzes item columns were found in this CSV.');
     }
 
+    // Locate each repeated item block by its 'ItemID' column, so extra columns Canvas adds between blocks don't shift the offsets.
+    const itemIdIndexes = [];
+    for (let index = firstItemIndex; index < summaryIndex; index += 1) {
+        if (header[index].trim() === 'ItemID') {
+            itemIdIndexes.push(index);
+        }
+    }
+
     const itemResults = [];
     for (const row of dataRows) {
         const studentId = String(row[studentIdIndex] ?? '').trim();
@@ -53,10 +70,15 @@ const readQuizFile = (rows) => {
             continue;
         }
 
-        for (let itemIndex = firstItemIndex; itemIndex + 4 < summaryIndex; itemIndex += 5) {
-            const itemId = String(row[itemIndex] ?? '').trim();
-            const earnedPoints = getNumericValue(row[itemIndex + 3]);
-            const status = String(row[itemIndex + 4] ?? '').trim();
+        for (let blockIndex = 0; blockIndex < itemIdIndexes.length; blockIndex += 1) {
+            const itemIdIndex = itemIdIndexes[blockIndex];
+            const blockEnd = itemIdIndexes[blockIndex + 1] ?? summaryIndex;
+            const earnedPointsIndex = findColumnIndexInRange(header, 'EarnedPoints', itemIdIndex + 1, blockEnd);
+            const statusIndex = findColumnIndexInRange(header, 'Status', itemIdIndex + 1, blockEnd);
+
+            const itemId = String(row[itemIdIndex] ?? '').trim();
+            const earnedPoints = earnedPointsIndex === -1 ? null : getNumericValue(row[earnedPointsIndex]);
+            const status = statusIndex === -1 ? '' : String(row[statusIndex] ?? '').trim();
             if (!itemId || earnedPoints === null || status !== 'Graded') {
                 continue;
             }
