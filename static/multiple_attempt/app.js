@@ -151,7 +151,7 @@ const readQuizFile = (rows) => {
             const blockEnd = itemIdIndexes[blockIndex + 1] ?? summaryIndex;
             const earnedPointsIndex = findColumnIndexInRange(header, 'EarnedPoints', itemIdIndex + 1, blockEnd);
             const statusIndex = findColumnIndexInRange(header, 'Status', itemIdIndex + 1, blockEnd);
-            const possibleFriendlyName = header[itemIdIndex + 1] ?? '';
+            const possibleFriendlyName = header[itemIdIndex + 2] ?? '';
             const itemId = String(row[itemIdIndex] ?? '').trim();
             const earnedPoints = earnedPointsIndex === -1 ? null : getNumericValue(row[earnedPointsIndex]);
             const status = statusIndex === -1 ? '' : String(row[statusIndex] ?? '').trim();
