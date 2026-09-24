@@ -32,7 +32,8 @@ const showItemNameMapping = (itemResults, file) => {
         labelNode.textContent = `Friendly name for "${itemId}"`;
         inputNode.type = 'text';
         inputNode.name = 'itemName';
-        inputNode.value = itemId;
+        const itemResult = itemResults.find((result) => result.itemId === itemId);
+        inputNode.value = itemResult?.possibleFriendlyName || itemId;
         inputNode.dataset.itemId = itemId;
         inputNode.classList.add('form-control');
         itemNode.appendChild(labelNode);
@@ -150,14 +151,14 @@ const readQuizFile = (rows) => {
             const blockEnd = itemIdIndexes[blockIndex + 1] ?? summaryIndex;
             const earnedPointsIndex = findColumnIndexInRange(header, 'EarnedPoints', itemIdIndex + 1, blockEnd);
             const statusIndex = findColumnIndexInRange(header, 'Status', itemIdIndex + 1, blockEnd);
-
+            const possibleFriendlyName = header[itemIdIndex + 1] ?? '';
             const itemId = String(row[itemIdIndex] ?? '').trim();
             const earnedPoints = earnedPointsIndex === -1 ? null : getNumericValue(row[earnedPointsIndex]);
             const status = statusIndex === -1 ? '' : String(row[statusIndex] ?? '').trim();
             if (!itemId || earnedPoints === null || status !== 'Graded') {
                 continue;
             }
-            itemResults.push({ studentId, itemId, attempt, earnedPoints });
+            itemResults.push({ studentId, itemId, attempt, earnedPoints, possibleFriendlyName });
         }
     }
     return itemResults;
